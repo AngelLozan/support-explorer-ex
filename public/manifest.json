@@ -1,0 +1,12 @@
+{
+  "name": "Support Explorer Tool",
+  "description": "Support Explorer Tool",
+  "version": "1.0",
+  "manifest_version": 3,
+
+  "permissions": ["storage", "activeTab", "tabs", "identity"],
+
+  "action": {
+    "default_popup": "index.html"
+  }
+}
