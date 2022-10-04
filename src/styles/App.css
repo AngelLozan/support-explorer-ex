@@ -86,6 +86,12 @@ body {
   padding:  5px;
 }
 
+.glow {
+  outline: none;
+  box-shadow: 0 0 8px #720dff;
+  transition: 1s;
+}
+
 .animated {
     -webkit-animation-duration: 1s;
     animation-duration: 1s;
