@@ -1,8 +1,17 @@
 {
   "name": "Support Explorer Tool",
   "description": "Support Explorer Tool",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
+
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
 
   "permissions": ["storage", "activeTab", "tabs", "identity"],
 

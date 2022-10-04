@@ -2,7 +2,7 @@
 
 A project to create an internal tool for the first CS department hackathon. A block explorer extension designed to fit the needs of a 100+ person team and improve support latency. Search a transaction or address and the tool will match that address/TX with the correct chain. 
 
-[![Support Explorer Icon](https://github.com/AngelLozan/Block-Explorer-Hackathon-Idea-2/blob/main/public/SearchExo.png?raw=true)]
+![Support Explorer Icon](https://github.com/AngelLozan/Block-Explorer-Hackathon-Idea-2/blob/main/public/SearchExo.png?raw=true)
 
 ## Installation
 
