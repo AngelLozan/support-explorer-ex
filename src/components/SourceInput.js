@@ -25,10 +25,10 @@ function SourceInput() {
     }
 
     const foundText = async () => {
-        var x = await document.getElementById("snackbar");
-        x.innerText = "I found one! Click the asset icon to open the explorer."
-        x.className = "show";
-        setTimeout(function() { x.className = x.className.replace("show", ""); }, 1800);
+        var snackbar = await document.getElementById("snackbar");
+        snackbar.innerText = "I found one! Click the asset icon to open the explorer."
+        snackbar.className = "show";
+        setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
     }
 
     const search = async () => {
