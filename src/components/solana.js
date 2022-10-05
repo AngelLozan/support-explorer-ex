@@ -1,4 +1,5 @@
-import React from 'react';
+//@dev Matches solana addresses. 
+
 import {PublicKey} from '@solana/web3.js'
 
 const validateSolAddress = async (address) => {

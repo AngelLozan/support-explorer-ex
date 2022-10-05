@@ -1,4 +1,4 @@
-//@dev Not complete yet need to adapt method at the bottom. 
+//@dev Match tx hashes for solana. 
 
 import { Connection } from "@solana/web3.js";
 
