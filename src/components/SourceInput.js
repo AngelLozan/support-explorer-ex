@@ -1,31 +1,19 @@
 /* global chrome */
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/App.css';
 import logo from './fella.png';
-import eth from './eth.svg';
-import xrp from './xrp.svg';
-import btc from './btc.svg';
+import searchIcon from './magnifying-glass-solid.svg';
 import validateSolAddress from './solana.js';
 
 
 function SourceInput() {
-
-    //const SEARCH_URL = 'https://blockchair.com/search?q=';
-
-    const [showResults, setShowResults] = useState(); //@dev Used to hide or show results in popup. Inactive until search activated. 
-    const [imgSrc, setImgSrc] = useState(); //@dev Used to set the URL for the iframe depending on regex match. Where to search the transaction hash. 
-    const [imgUrl, setImgUrl] = useState();
 
     //@dev Used for populating UI response from Exodude image on popup when empty string is searched. 
     const emojis = ['✌️ Enter query', '🤔 I\'m listening', '🦾 I find things', '🚀 To the moon\!', '🤙 Query vibez', '🖖 Search ser', '👋 Hi there', '👾 Can I help?', '🧠 Query me', '🌈 Enter search', '✨ Shiny searches', '💫 Find a tx here'];
     const getRandomEmoji = () => {
         return emojis[~~(Math.random() * emojis.length)]
     };
-
-    const link = async () => {
-        chrome.tabs.create({ active: false, url: imgUrl })
-    }
 
     const foundText = async () => {
         var snackbar = await document.getElementById("snackbar");
@@ -34,125 +22,104 @@ function SourceInput() {
         setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
     }
 
-
-//@dev This will be the function to loop the dictionary and take the source variable as the hash.
-
-async function hashDictionary(source) {
-     let chain = false;
-     let hashRegex;
-     let coinIcon = [];
-
-     //@dev Dictionary for tx regexes, search parameters, chain and can add addresses.
-     //@dev Needs to use different explorer: algo, tezos, solana
-
-
-     let hashRegexs = {
-         "bitcoin": "^[0-9a-f]{64}$:btc", //@dev This works to match multiple TX. Ok for url search, icon population is difficult though, could be multi but not super helpful. 
-         "ethereum": "^(0x[0-9a-fA-F]{64}|[0-9a-fA-F]{40})$:eth", //@dev This could be bnb and bsc. Not super helpful for icon matching either. 
-         "tezos": "^o[a-zA-Z0-9]{50}:tezos", //@dev Only tx so far. 
-         "cardano":"^([9A-HJ-NP-Za-km-z]|addr1[a-z0-9])+:ada", //@dev needs update. Match too broad.
-         "monero":"4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$:xmr",
-         "stellar":"^G[A-Z0-9]{55}$:xlm",
-         "ripple":"^r[1-9A-HJ-NP-Za-km-z]{25,33}$|^[A-F0-9]{64}$:xrp",
-         "litecoin":"^ltc[a-zA-Z0-9]{5,88}|[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$:ltc",
-         "dash":"^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$:dash",
-         "dogecoin":"^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$:doge",
-         "bitcoincash":"^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$:bch",
-         "bitcoin2":"^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$:btc",
-         "algorand":"^[A-Z2-7]{58}$:algo", //@dev Just the address so far. Needs TX regex. 
-         "multiple":"^[0-9a-fA-F]{64}$:multi" //@dev Matches many TX hashes on many chains. Could just have icon for multi and url is blockchair. Also not super helpful. 
-     }
-
-
-     for (let keys in hashRegexs) {
-         //@dev keys are the chains
-         hashRegex = hashRegexs[keys].split(':')[0]; //@dev Get regex
-
-         let regex = new RegExp(hashRegex, 'gi'); //@dev formats as regex.
-
-         if (regex.test(source)) {
-             chain = keys;
-             coinIcon.push(hashRegexs[keys].split(':')[1]); //@dev Get coin icon
-             console.log("Coin icon is for: ", chain, coinIcon, hashRegex);
-         } 
-     };
-
-    for(var i=0; i< coinIcon.length; i++){
-        //get image
+    const noCoinText = async () => {
+        var snackbar = await document.getElementById("snackbar");
+        snackbar.innerText = "😥 No results found for that query. Click me to reset."
+        snackbar.className = "show";
+        setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
+        console.log('Not a valid address or transaction ID')
     }
- }
 
+function getTimeTitle() {
+    var snackbar = document.getElementById("snackbar");
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    if (time >= "12:00:00" && time <= "17:00:00") {
+        snackbar.innerText = "Good Afternoon! 🚀";
+    } else if (time >= "17:00:01" && time <= "23:59:59") {
+        snackbar.innerText = "Good Evening! 🌙";
+    } else {
+        snackbar.innerText = "GM! 🌤️"
+    }
+
+    snackbar.className = "show";
+    //@dev After 1.5 seconds, remove the show class from DIV
+    setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1500);
+}
+
+//@dev Have not yet matched regex and url for these. 
+// "algorand":"^[A-Z2-7]{58}$:algo", //@dev Just the address so far. Needs TX regex. 
+// "tezos": "^o[a-zA-Z0-9]{50}:tezos", //@dev Only tx so far. 
 
     const search = async () => {
-        let source = document.getElementById('sourceInput').value
+        let source = await document.getElementById('sourceInput').value
         console.log(source.length)
 
         if (source === null || source === undefined || !source) {
-            var x = await document.getElementById("snackbar");
-            x.innerText = `${getRandomEmoji()}`;
-            x.className = "show";
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1100);
+            var snackbar = await document.getElementById("snackbar");
+            snackbar.innerText = `${getRandomEmoji()}`;
+            snackbar.className = "show";
+            setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1100);
         } else if (/^0x[a-fA-F0-9]{40}$/.test(source)) {
-            // Ethereum address
-            //chrome.tabs.create({active: true, url: 'https://blockscan.com/address/' + source})
-            let address = 'https://blockchair.com/search?q=' + source;
-            console.log("setting Eth add.")
-            await setImgSrc(eth);
-            await setImgUrl(address);
-            foundText();
-            setShowResults(true);
+            // EVM address
+            chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
         } else if (/^0x([A-Fa-f0-9]{64})$/.test(source)) {
-            // Ethereum transaction
-            //chrome.tabs.create({active: true, url: 'https://blockscan.com/tx/' + source})
-            let address = 'https://blockscan.com/tx/' + source;
-            console.log("setting Eth tx.")
-            await setImgUrl(address);
-            await setImgSrc(eth);
-            foundText();
-            setShowResults(true);
+            // EVM transaction
+            chrome.tabs.create({active: true, url: 'https://blockscan.com/tx/' + source})
         } else if (/^r[1-9A-HJ-NP-Za-km-z]{25,33}$/.test(source)) {
             // XRP address
-            //chrome.tabs.create({active: true, url: 'https://xrpscan.com/account/' + source})
-            let address = 'https://blockchair.com/search?q=' + source;
-            await setImgUrl(address);
-            await setImgSrc(xrp);
-            foundText();
-            setShowResults(true);
+            chrome.tabs.create({active: true, url: 'https://xrpscan.com/account/' + source})
         } else if (/^[A-F0-9]{64}$/.test(source)) {
             // XRP transaction
-            //chrome.tabs.create({active: true, url: 'https://xrpscan.com/tx/' + source})
-            let address = 'https://xrpscan.com/tx/' + source;
-            await setImgUrl(address);
-            await setImgSrc(xrp);
-            foundText();
-            setShowResults(true);
+            chrome.tabs.create({active: true, url: 'https://xrpscan.com/tx/' + source})
+        } else if (await validateSolAddress(source) === true) {
+            // SOL address
+            chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
+        } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$|/.test(source)){
+            //Search blockchair for 18 chains.
+            chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
+        }
+        // else if () {
+            //@dev Placeholder Solana TX.
+            //chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source}) 
+        // } else if () {
+            //@dev Placeholder for Algo TX
+            //chrome.tabs.create({active: true, url: '' + source}) 
+        //} else if () {
+            //@dev Placeholder for Algo address
+            //chrome.tabs.create({active: true, url: '' + source}) 
+        //} else if () {
+            //@dev Placeholder for tezo TX/address
+            //chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source}) 
+        //}
+        else if (/^[0-9a-fA-F]{64}$/.test(source)) {
+            //blockchair tx
+            chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else {
-            var x = await document.getElementById("snackbar");
-            x.innerText = "😥 No results found for that query. Click me to reset."
-            x.className = "show";
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1800);
-            console.log('Not a valid address or transaction ID')
+            noCoinText();
         }
     }
 
+//@dev Calls the onload listener to populate the snackbar with a GM or the time greeting from Exodude. 
+useEffect(() => {
+    document.addEventListener('DOMContentLoaded', getTimeTitle())
+    console.log("Loaded and triggered title")
+}, []);
+
     return (
         
-        <div className='sourceInputContainer'>
-        <h2>Support Explorer</h2>
-        <a href="" tabIndex="-1" title="Exodude loves you">
-        <img class="animated bounce" style={{ width: "auto" , height:"2em" }} src={logo} />
-        </a>
-        <input autoFocus id='sourceInput' className='sourceInput' placeholder='Address or Transaction ID' tabIndex="1" selected></input>
-        <button class = "searchBtn" onClick={search} tabIndex="2">Search</button> 
-
-        {showResults && <div> 
-        <br/>
-        <a href={imgUrl} onClick={link} title="Chain icon(s)"> <img class="animated bounce" style={{ width: "auto" , height:"4em", marginBottom:"10px" }} src={imgSrc} /> </a> </div> }
-        
+        <div class="wrapper">
+        <form class="flex" action="https://blockchair.com/search" method="get" id="ExplorerAppForm">
+            <a href="" class="extension__logo animated bounce" id="logo" tabindex="-1"> <img class="extension__logo--image" src={logo} alt="Exodude of course!" tite="exodude loves you" /></a>
+            <input autoFocus id="sourceInput" class="extension__input" placeholder="Search a Transaction or Address for 32 different blockchains" data-toggle="tooltip" title="Search a Transaction or Address for 32 different blockchains." tabindex="1"></input>
+            <button onClick={search} class="extension__search-btn" data-toggle="tooltip" place="embeded" title="Search for transactions, addresses, blocks, and even embedded text data." tabindex="2">
+                <img class="landing__search-icon" src={searchIcon}/>
+            </button>
+        </form>
 
         <div id="snackbar"></div>
-    </div>
-   
+        </div>
     )
 }
 

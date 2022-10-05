@@ -5,9 +5,9 @@ const validateSolAddress = async (address) => {
     try {
         let pubkey = await new PublicKey(address)
         let  isSolana =  await PublicKey.isOnCurve(pubkey.toBuffer())
-        return isSolana
+        return isSolana;
     } catch (error) {
-        return false
+        return false;
     }
 } 
 
