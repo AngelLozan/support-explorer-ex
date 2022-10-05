@@ -34,25 +34,34 @@ function SourceInput() {
     }
 
 
-//@dev This will be the function to loop the dictionary and take the source variable as the hash. 
-    async function hashDictionary(hash) {
+//@dev This will be the function to loop the dictionary and take the source variable as the hash.
+
+async function hashDictionary(source) {
      let chain = false;
      let hashRegex;
-     let coinIcon;
+     let coinIcon = [];
 
      //@dev Dictionary for tx regexes, search parameters, chain and can add addresses.
+     //@dev Needs to use different explorer: algo, tezos, solana
+
 
      let hashRegexs = {
-         "bitcoin": "^[0-9a-f]{64}$:btc",
-         "ethereum": "^0x[0-9a-fA-F]{64}$:eth",
-         "tezos": "^o[a-zA-Z0-9]{50}:tezos",
-         "cardano":"9A-HJ-NP-Za-km-z]+:ada",
-         "cardano":"addr1[a-z0-9]+:ada",
+         "bitcoin": "^[0-9a-f]{64}$:btc", //@dev This works to match multiple TX. Ok for url search, icon population is difficult though, could be multi but not super helpful. 
+         "ethereum": "^(0x[0-9a-fA-F]{64}|[0-9a-fA-F]{40})$:eth", //@dev This could be bnb and bsc. Not super helpful for icon matching either. 
+         "tezos": "^o[a-zA-Z0-9]{50}:tezos", //@dev Only tx so far. 
+         "cardano":"^([9A-HJ-NP-Za-km-z]|addr1[a-z0-9])+:ada", //@dev needs update. Match too broad.
          "monero":"4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$:xmr",
          "stellar":"^G[A-Z0-9]{55}$:xlm",
-         "ripple":"r[rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz]{27,35}$:xrp",
-
+         "ripple":"^r[1-9A-HJ-NP-Za-km-z]{25,33}$|^[A-F0-9]{64}$:xrp",
+         "litecoin":"^ltc[a-zA-Z0-9]{5,88}|[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$:ltc",
+         "dash":"^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$:dash",
+         "dogecoin":"^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$:doge",
+         "bitcoincash":"^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$:bch",
+         "bitcoin2":"^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$:btc",
+         "algorand":"^[A-Z2-7]{58}$:algo", //@dev Just the address so far. Needs TX regex. 
+         "multiple":"^[0-9a-fA-F]{64}$:multi" //@dev Matches many TX hashes on many chains. Could just have icon for multi and url is blockchair. Also not super helpful. 
      }
+
 
      for (let keys in hashRegexs) {
          //@dev keys are the chains
@@ -60,15 +69,16 @@ function SourceInput() {
 
          let regex = new RegExp(hashRegex, 'gi'); //@dev formats as regex.
 
-         if (regex.test(hash)) {
+         if (regex.test(source)) {
              chain = keys;
-             coinIcon = hashRegexs[keys].split(':')[1]; //@dev Get coin icon
-             console.log("Coin icon is for: ", chain);
-         } else {
-             console.log("Not the right chain", keys);
-         }
+             coinIcon.push(hashRegexs[keys].split(':')[1]); //@dev Get coin icon
+             console.log("Coin icon is for: ", chain, coinIcon, hashRegex);
+         } 
      };
 
+    for(var i=0; i< coinIcon.length; i++){
+        //get image
+    }
  }
 
 
@@ -125,6 +135,7 @@ function SourceInput() {
     }
 
     return (
+        
         <div className='sourceInputContainer'>
         <h2>Support Explorer</h2>
         <a href="" tabIndex="-1" title="Exodude loves you">
@@ -140,6 +151,7 @@ function SourceInput() {
 
         <div id="snackbar"></div>
     </div>
+   
     )
 }
 
