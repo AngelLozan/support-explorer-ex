@@ -5,6 +5,7 @@ import '../styles/App.css';
 import logo from './fella.png';
 import searchIcon from './magnifying-glass-solid.svg';
 import validateSolAddress from './solana.js';
+import validateSignature from './solSignature.js';
 
 function SourceInput() {
 
@@ -17,7 +18,7 @@ function SourceInput() {
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
-        snackbar.innerText = "😥 No results found for that query. Click me to reset."
+        snackbar.innerText = "😥 No results found. Click me to reset."
         snackbar.className = "show";
         setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
         console.log('Not a valid address or transaction ID')
@@ -69,6 +70,9 @@ function getTimeTitle() {
         } else if (await validateSolAddress(source) === true) {
             // SOL address
             chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
+        } else if (await validateSignature(source)) {
+            // SOL TX
+            chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source})
         } else if (/^T[A-Za-z1-9]{33}$/g.test(source)) {
             //TRX address
             chrome.tabs.create({active: true, url: 'https://tronscan.org/#/address/' + source})
@@ -76,10 +80,7 @@ function getTimeTitle() {
             //Search blockchair for most of the other chains out of the total 18 chains provided.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } 
-        // else if () {
-            //@dev Placeholder Solana TX.
-            //chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source}) 
-        // } else if () {
+        //else if () {
             //@dev Placeholder for Algo TX
             //chrome.tabs.create({active: true, url: '' + source}) 
         //} else if () {
