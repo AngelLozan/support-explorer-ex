@@ -61,22 +61,22 @@ function getTimeTitle() {
             snackbar.innerText = `${getRandomEmoji()}`;
             snackbar.className = "show";
             setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1100);
-        } else if (/^0x[a-fA-F0-9]{40}$/.test(source)) {
+        } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
             // EVM address
             chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
-        } else if (/^0x([A-Fa-f0-9]{64})$/.test(source)) {
+        } else if (/^0x([A-Fa-f0-9]{64})$/g.test(source)) {
             // EVM transaction
             chrome.tabs.create({active: true, url: 'https://blockscan.com/tx/' + source})
-        } else if (/^r[1-9A-HJ-NP-Za-km-z]{25,33}$/.test(source)) {
+        } else if (/^r[1-9A-HJ-NP-Za-km-z]{25,33}$/g.test(source)) {
             // XRP address
             chrome.tabs.create({active: true, url: 'https://xrpscan.com/account/' + source})
-        } else if (/^[A-F0-9]{64}$/.test(source)) {
+        } else if (/^[A-F0-9]{64}$/g.test(source)) {
             // XRP transaction
             chrome.tabs.create({active: true, url: 'https://xrpscan.com/tx/' + source})
         } else if (await validateSolAddress(source) === true) {
             // SOL address
             chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
-        } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$|/.test(source)){
+        } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$/g.test(source)){
             //Search blockchair for 18 chains.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         }
@@ -93,8 +93,8 @@ function getTimeTitle() {
             //@dev Placeholder for tezo TX/address
             //chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source}) 
         //}
-        else if (/^[0-9a-fA-F]{64}$/.test(source)) {
-            //blockchair tx
+        else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
+            //blockchair tx general
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else {
             noCoinText();
