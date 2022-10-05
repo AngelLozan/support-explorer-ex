@@ -6,6 +6,7 @@ import logo from './fella.png';
 import eth from './eth.svg';
 import xrp from './xrp.svg';
 import btc from './btc.svg';
+import validateSolAddress from './solana.js';
 
 
 function SourceInput() {
