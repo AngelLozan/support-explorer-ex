@@ -15,12 +15,6 @@ function SourceInput() {
         return emojis[~~(Math.random() * emojis.length)]
     };
 
-    const foundText = async () => {
-        var snackbar = await document.getElementById("snackbar");
-        snackbar.innerText = "I found one! Click the asset icon to open the explorer."
-        snackbar.className = "show";
-        setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
-    }
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
@@ -45,7 +39,7 @@ function getTimeTitle() {
 
     snackbar.className = "show";
     //@dev After 1.5 seconds, remove the show class from DIV
-    setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1500);
+    setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1000);
 }
 
 //@dev Have not yet matched regex and url for these. 
@@ -60,7 +54,7 @@ function getTimeTitle() {
             var snackbar = await document.getElementById("snackbar");
             snackbar.innerText = `${getRandomEmoji()}`;
             snackbar.className = "show";
-            setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1100);
+            setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 900);
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
             // EVM address
             chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
