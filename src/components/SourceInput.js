@@ -1,6 +1,5 @@
 /* global chrome */
-import React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import '../styles/App.css';
 import logo from './fella.png';
 import searchIcon from './magnifying-glass-solid.svg';
@@ -10,7 +9,7 @@ import validateSignature from './solSignature.js';
 function SourceInput() {
 
     //@dev Used for populating UI response from Exodude image on popup when empty string is searched. 
-    const emojis = ['✌️ Enter query', '🤔 I\'m listening', '🦾 I find things', '🚀 To the moon\!', '🤙 Query vibez', '🖖 Search ser', '👋 Hi there', '👾 Can I help?', '🧠 Query me', '🌈 Enter search', '✨ Shiny searches', '💫 Find a tx here'];
+    const emojis = ['✌️ Enter query', '🤔 I\'m listening', '🦾 I find things', '🚀 To the moon!', '🤙 Query vibez', '🖖 Search ser', '👋 Hi there', '👾 Can I help?', '🧠 Query me', '🌈 Enter search', '✨ Shiny searches', '💫 Find a tx here'];
     const getRandomEmoji = () => {
         return emojis[~~(Math.random() * emojis.length)]
     };
@@ -27,7 +26,6 @@ function SourceInput() {
 function getTimeTitle() {
     var snackbar = document.getElementById("snackbar");
     var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     if (time >= "12:00:00" && time <= "17:00:00") {
         snackbar.innerText = "Good Afternoon! 🚀";
@@ -112,7 +110,7 @@ useEffect(() => {
             <a href="" class="extension__logo animated bounce" id="logo" tabindex="-1"> <img class="extension__logo--image" src={logo} alt="Exodude of course!" tite="exodude loves you" /></a>
             <input autoFocus id="sourceInput" class="extension__input" placeholder="Search a Transaction or Address for 32 different blockchains" data-toggle="tooltip" title="Search a Transaction or Address for 32 different blockchains." tabindex="1"></input>
             <button onClick={search} class="extension__search-btn" data-toggle="tooltip" place="embeded" title="Search for transactions, addresses, blocks, and even embedded text data." tabindex="2">
-                <img class="landing__search-icon" src={searchIcon}/>
+                <img class="landing__search-icon" alt="A magnifying glass" src={searchIcon}/>
             </button>
         </form>
 
