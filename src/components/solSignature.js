@@ -1,22 +1,22 @@
 //@dev Not complete yet need to adapt method at the bottom. 
 
-// import React from 'react';
-// import {PublicKey} from '@solana/web3.js'
-
-// const validateSignature = async (tx) => {
-//     try {
-//         let pubkey = await new PublicKey(tx)
-//         let  isSolana =  await PublicKey.isOnCurve(pubkey.toBuffer())
-//         return isSolana;
-//     } catch (error) {
-//         return false;
-//     }
-// } 
-
-// export default validateSignature;
+import { Connection } from "@solana/web3.js";
 
 
+const validateSignature = async (tx) => {
+    try {
+        let connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+        let transaction = await connection.getParsedTransaction(tx);
+        let slot = await transaction.slot;
 
+        if (slot) {
+            return true;
+        } else {
+        	console.log(transaction);
+        }
+    } catch (error) {
+        console.log("Error in solana signature verification: ", error);
+    }
+}
 
-
-// verifySignatures()
+export default validateSignature;
