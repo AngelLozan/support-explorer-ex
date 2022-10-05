@@ -251,7 +251,7 @@ label {
     left: 10%;
     /* Bring the snackbar closer to exodude*/
     right: 60%;
-    top: 18px;
+    top: 20px;
     font-family: $Roboto;
 }
 
@@ -274,7 +274,7 @@ label {
     }
 
     to {
-        top: 18px;
+        top: 20px;
         opacity: 1;
     }
 }
@@ -286,14 +286,14 @@ label {
     }
 
     to {
-        top: 18px;
+        top: 20px;
         opacity: 1;
     }
 }
 
 @-webkit-keyframes fadeout {
     from {
-        top: 18px;
+        top: 20px;
         opacity: 1;
     }
 
@@ -305,7 +305,7 @@ label {
 
 @keyframes fadeout {
     from {
-        top: 18px;
+        top: 20px;
         opacity: 1;
     }
 
