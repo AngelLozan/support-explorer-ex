@@ -18,21 +18,16 @@ function SourceInput() {
         return emojis[~~(Math.random() * emojis.length)]
     };
 
-    const lookUpText = async () => {
+   const lookUpText = async () => {
      var snackbar = await document.getElementById("snackbar");
-     var loading = await document.getElementById("loading");
-
-     try {
-         snackbar.innerText = "🔍 One moment, let me look that up...";
-         snackbar.className = "show";
-
-         loading.className = "show";
-         setTimeout(function() { loading.className = loading.className.replace("show", ""); }, 1800);
-         setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
-     } catch (e) {
-         console.log(e);
-     }
-
+        snackbar.innerText = "Multiple ⛓ Opening a new minimized window with explorers."
+        snackbar.className = "show";
+        snackbar.style.right = "10%";
+        setTimeout(function() { 
+            snackbar.className = snackbar.className.replace("show", ""); 
+            snackbar.style.right = snackbar.style.right.replace("10%", "60%")
+        }, 3000);
+        
  }
 
     const noCoinText = async () => {
@@ -60,7 +55,7 @@ function getTimeTitle() {
     }
 
     snackbar.className = "show";
-    //@dev After 1.5 seconds, remove the show class from DIV
+    //@dev After 1 second, remove the show class from DIV
     setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1000);
 }
 
@@ -83,48 +78,49 @@ function getTimeTitle() {
             //@dev Placeholder for Algo TX
             chrome.tabs.create({active: true, url: 'https://algoexplorer.io/tx/' + source}) 
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
-            // EVM address
+            //@dev EVM address
             chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
         } else if (/^0x([A-Fa-f0-9]{64})$/g.test(source)) {
-            // EVM transaction
+            //@dev EVM transaction
             chrome.tabs.create({active: true, url: 'https://blockscan.com/tx/' + source})
         } else if (/^r[1-9A-HJ-NP-Za-km-z]{25,33}$/g.test(source)) {
-            // XRP address
+            //@dev XRP address
             chrome.tabs.create({active: true, url: 'https://xrpscan.com/account/' + source})
-        } else if (/^[A-F0-9]{64}$/g.test(source)) {
-            // XRP transaction
-            chrome.tabs.create({active: true, url: 'https://xrpscan.com/tx/' + source})
         } else if (await validateSolAddress(source) === true) {
-            // SOL address
+            //@dev SOL address
             await lookUpText();
             chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
         } else if (await validateSignature(source)) {
-            // SOL TX
+            //@dev SOL TX
             await lookUpText();
             chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source})
         } else if (/^(cosmos)[a-z0-9]{39}$/g.test(source)) { 
-            // Atom Address
+            //@dev Atom Address
             chrome.tabs.create({active: true, url: 'https://atomscan.com/accounts/' + source})
         } else if (/^(bnb1)[a-z0-9]{38}$/g.test(source)) {
-            // BNB Beacon Address
+            //@dev BNB Beacon Address
             chrome.tabs.create({active: true, url: 'https://binance.mintscan.io/account/' + source})
         } else if (/^T[A-Za-z1-9]{33}$/g.test(source)) {
-            //TRX address
+            //@dev TRX address
             chrome.tabs.create({active: true, url: 'https://tronscan.org/#/address/' + source})
         } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/.test(source)) {
-            //HBAR address
+            //@dev HBAR address
             chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/accounts/' + source})
-        } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$/g.test(source)){
-            //Most chains. Includes LTC, ADA, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
-            chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
-            //blockchair tx general (Also: Tron, ATOM, UTXOs, BNB beacon chain)
+            //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP)
+            let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source)];
+            //@dev Opens new, unfocused and minimized window with all the tabs in array and matching the source. 
+            await lookUpText();
+            chrome.windows.create({ focused: false, state: "minimized", url: urlArray });
+        } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$/g.test(source)){
+            //@dev Most chains addresses. Needs to stay last so other regex's work. Includes LTC, ADA, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else {
             noCoinText();
         }
         
     }
+//<div id="loading" class="loading"><img src={spinner} />
 
 //@dev Calls the onload listener to populate the snackbar with a GM or the time greeting from Exodude. 
 useEffect(() => {
@@ -143,7 +139,8 @@ useEffect(() => {
             </button>
         </form>
 
-        <div id="snackbar"><div id="loading" class="loading"><img src={spinner} /></div></div>
+
+        <div id="snackbar"></div>
         </div>
     )
 }
