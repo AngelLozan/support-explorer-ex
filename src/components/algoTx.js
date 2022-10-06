@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const getAlgoData = async (source) => {
 
-let proxy = "https://cors-anywhere.herokuapp.com/";
+let proxy = "";
 let api = 'https://algoindexer.algoexplorerapi.io/v2/transactions?txid=';
 let tx = source;
 

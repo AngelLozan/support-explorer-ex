@@ -4,8 +4,8 @@ import axios from 'axios';
 
 const verifyTezTx = async (source) => {
 
-let proxy = "https://cors-anywhere.herokuapp.com/";
-let api = 'api.tzstats.com/explorer/op/';
+let proxy = "";
+let api = 'https://api.tzstats.com/explorer/op/';
 let tx = source;
 
   try {
