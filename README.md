@@ -29,5 +29,3 @@ To Do:
 
 - Edge case for special characters to exclude? Exclude string under certain length (ex. Accidental typing in search box takes you to blockchair
 - HBAR TX regex create.
-- iframes opened, grid 4, new whole tab with 4 explorers matched by last regex. 
-- loading in snackbar.
