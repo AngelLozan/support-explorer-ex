@@ -208,7 +208,6 @@ label {
   margin-top: 24px;
   -webkit-animation: thinking-spin 1s linear infinite;
   animation: thinking-spin 1s linear infinite;
-  display: none;
 }
 
 @-moz-keyframes thinking-spin {
