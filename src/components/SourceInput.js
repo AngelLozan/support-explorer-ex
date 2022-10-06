@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import '../styles/App.css';
 import logo from './fella.png';
+import spinner from './spinner-solid.svg';
 import searchIcon from './magnifying-glass-solid.svg';
 import validateSolAddress from './solana.js';
 import validateSignature from './solSignature.js';
@@ -10,12 +11,29 @@ import validateSignature from './solSignature.js';
 
 function SourceInput() {
 
+
     //@dev Used for populating UI response from Exodude image on popup when empty string is searched. 
     const emojis = ['✌️ Enter query', '🤔 I\'m listening', '🦾 I find things', '🚀 To the moon!', '🤙 Query vibez', '🖖 Search ser', '👋 Hi there', '👾 Can I help?', '🧠 Query me', '🌈 Enter search', '✨ Shiny searches', '💫 Find a tx here'];
     const getRandomEmoji = () => {
         return emojis[~~(Math.random() * emojis.length)]
     };
 
+    const lookUpText = async () => {
+     var snackbar = await document.getElementById("snackbar");
+     var loading = await document.getElementById("loading");
+
+     try {
+         snackbar.innerText = "🔍 One moment, let me look that up...";
+         snackbar.className = "show";
+
+         loading.className = "show";
+         setTimeout(function() { loading.className = loading.className.replace("show", ""); }, 1800);
+         setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
+     } catch (e) {
+         console.log(e);
+     }
+
+ }
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
@@ -78,10 +96,18 @@ function getTimeTitle() {
             chrome.tabs.create({active: true, url: 'https://xrpscan.com/tx/' + source})
         } else if (await validateSolAddress(source) === true) {
             // SOL address
+            await lookUpText();
             chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
         } else if (await validateSignature(source)) {
             // SOL TX
+            await lookUpText();
             chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source})
+        } else if (/^(cosmos)[a-z0-9]{39}$/g.test(source)) { 
+            // Atom Address
+            chrome.tabs.create({active: true, url: 'https://atomscan.com/accounts/' + source})
+        } else if (/^(bnb1)[a-z0-9]{38}$/g.test(source)) {
+            // BNB Beacon Address
+            chrome.tabs.create({active: true, url: 'https://binance.mintscan.io/account/' + source})
         } else if (/^T[A-Za-z1-9]{33}$/g.test(source)) {
             //TRX address
             chrome.tabs.create({active: true, url: 'https://tronscan.org/#/address/' + source})
@@ -92,7 +118,7 @@ function getTimeTitle() {
             //Search blockchair for most of the other chains out of the total 18 chains provided.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
-            //blockchair tx general (also Tron Tx regex)
+            //blockchair tx general (Also: Tron, ATOM, UTXOs, BNB beacon chain)
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } 
         else {
@@ -118,7 +144,7 @@ useEffect(() => {
             </button>
         </form>
 
-        <div id="snackbar"></div>
+        <div id="snackbar"><div id="loading" class="loading"><img src={spinner} /></div></div>
         </div>
     )
 }
