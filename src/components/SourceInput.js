@@ -106,6 +106,10 @@ function getTimeTitle() {
         } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/.test(source)) {
             //@dev HBAR address
             chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/accounts/' + source})
+        } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?@?/.test(source)) {
+            //HBAR TXID
+            const hbarID = source.replace(/[^a-zA-Z0-9]/g, "")
+            chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/transactions/' + hbarID})
         } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
             //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP)
             let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source)];
