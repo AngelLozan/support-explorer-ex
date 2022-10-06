@@ -74,6 +74,9 @@ function getTimeTitle() {
         } else if (/^T[A-Za-z1-9]{33}$/g.test(source)) {
             //TRX address
             chrome.tabs.create({active: true, url: 'https://tronscan.org/#/address/' + source})
+        } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/.test(source)) {
+            //HBAR address
+            chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/accounts/' + source})
         } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$/g.test(source)){
             //Search blockchair for most of the other chains out of the total 18 chains provided.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
