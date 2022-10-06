@@ -92,7 +92,7 @@ function getTimeTitle() {
             //Search blockchair for most of the other chains out of the total 18 chains provided.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
-            //blockchair tx general
+            //blockchair tx general (also Tron Tx regex)
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } 
         else {
