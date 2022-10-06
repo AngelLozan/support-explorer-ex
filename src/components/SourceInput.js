@@ -5,6 +5,8 @@ import logo from './fella.png';
 import searchIcon from './magnifying-glass-solid.svg';
 import validateSolAddress from './solana.js';
 import validateSignature from './solSignature.js';
+//import getAlgoData from './algoTx.js';
+//import verifyTezTx from './tezTx.js';
 
 function SourceInput() {
 
@@ -17,9 +19,13 @@ function SourceInput() {
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
-        snackbar.innerText = "😥 No results found. Click me to reset."
+        snackbar.innerText = "🤔 No results found. Click me to reset."
         snackbar.className = "show";
-        setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1800);
+        snackbar.style.right = "40%";
+        setTimeout(function() { 
+            snackbar.className = snackbar.className.replace("show", ""); 
+            snackbar.style.right = snackbar.style.right.replace("40%", "60%")
+        }, 1500);
         console.log('Not a valid address or transaction ID')
     }
 
@@ -40,10 +46,6 @@ function getTimeTitle() {
     setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 1000);
 }
 
-//@dev Have not yet matched regex and url for these. 
-// "algorand":"^[A-Z2-7]{58}$:algo", //@dev Just the address so far. Needs TX regex. 
-// "tezos": "^o[a-zA-Z0-9]{50}:tezos", //@dev Only tx so far. 
-
     const search = async () => {
         let source = await document.getElementById('sourceInput').value
         console.log(source.length)
@@ -53,6 +55,15 @@ function getTimeTitle() {
             snackbar.innerText = `${getRandomEmoji()}`;
             snackbar.className = "show";
             setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 900);
+        } else if (/^tz[a-z0-9]{34}$|^o[a-z0-9]{50}$/gi.test(source)){ 
+            //@dev Tezos address or transaction respectively.
+            chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source}) 
+        } else if (/^[A-Z2-7]{58}$/g.test(source)) {
+            //@dev Placeholder for Algo address
+            chrome.tabs.create({active: true, url: 'https://algoexplorer.io/address/' + source}) 
+        } else if (/^[A-Z2-7]{52}$/g.test(source)) {
+            //@dev Placeholder for Algo TX
+            chrome.tabs.create({active: true, url: 'https://algoexplorer.io/tx/' + source}) 
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
             // EVM address
             chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
@@ -80,24 +91,14 @@ function getTimeTitle() {
         } else if (/^[0-9a-f]{64}$|^[1-9A-HJ-NP-Za-km-z]+|^addr1[a-z0-9]+|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|^(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87}|3[a-km-zA-HJ-NP-Z1-9]{25,34})$/g.test(source)){
             //Search blockchair for most of the other chains out of the total 18 chains provided.
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
-        } 
-        //else if () {
-            //@dev Placeholder for Algo TX
-            //chrome.tabs.create({active: true, url: '' + source}) 
-        //} else if () {
-            //@dev Placeholder for Algo address
-            //chrome.tabs.create({active: true, url: '' + source}) 
-        //} else if () {
-            //@dev Placeholder for tezo TX/address
-            //chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source}) 
-        //} 
-        else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
+        } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
             //blockchair tx general
             chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
         } 
         else {
             noCoinText();
         }
+        
     }
 
 //@dev Calls the onload listener to populate the snackbar with a GM or the time greeting from Exodude. 
