@@ -1,74 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Community Inbox Alert</title>
-    <link rel="stylesheet" href="popup.css">
-</head>
-
-<body>
-    <p id="dialog-box"></p>
-    <section class="current_assignment">
-        <form>
-            <label for="waitTimeThreshold" title="How long can a ticket wait before you're alerted">Alert Urgency</label>
-            <select id="waitTimeThreshold" class="selector" name="waitTimeThreshold" tabindex="2">
-                <option value="off" selected>Off</option>
-                <option value="3">High</option>
-                <option value="6">Elevated</option>
-                <option value="8">Low</option>
-            </select>
-        </form>
-    </section>
-    <div id="snackbar"></div>
-    <div id="animated" class="animated bounce" title="Exodude loves you">
-        <img id="falcon" src="fella.png" style="max-width:90px; height:auto;" alt="Exodude icon">
-    </div>
-    <div class="center">
-        <button id="inboxLink" style="color: white" class="button" title="Take me to Help Scout" tabindex="1">Community Inbox</button>
-
-        <div class="tooltip">
-
-            <p class="tooltiptextdown" style="padding: 5px;">Toggle Popular Links</p>
-
-            <form >
-            <label  class="switch">
-                <input id="switchForm" type="checkbox" title="Toggle on short links" tabindex="3"checked>
-                <span class="slider round"></span>
-            </label>
-        </form>
-
-        </div>
-
-
-    </div>
-
-    <section id="links" style="width: 180px, text-align: center">
-    
-        <div class="section_heading center">Popular Links</div>
-
-        <div class="gallery center" value="Daily">
-            <div class="tooltip">
-                <span class="tooltiptext">Daily Forecast</span>
-                <a id="dailyForecast"><img src="forecast.png" class="gallery__img" alt="Daily forecast"></a>
-            </div>
-            <div class="tooltip">
-                <span class="tooltiptext">High Five Submission</span>
-                <a id="highFive"><img src="highFive.png" class="gallery__img" alt="High Five Form"></a>
-            </div>
-            <div class="tooltip">
-                <span class="tooltiptext">SMSA Handbook</span>
-                <a id="handbook"><img src="smsaHandbook.png" class="gallery__img" alt="Smsa Handbook"></a>
-            </div>
-            <div class="tooltip">
-                <span class="tooltiptext">Feedback Form</span>
-                <a id="feedbackForm"><img src="form.png" class="gallery__img" alt="feedback form"></a>
-            </div>
-        </div>
-   
-    </section>
-
-    <script src="popup.js"></script>
-</body>
-
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+ 
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  
+  </body>
 </html>
