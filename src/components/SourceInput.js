@@ -1,5 +1,5 @@
 /* global chrome */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../styles/App.css";
 import logo from "./fella.png";
 import searchIcon from "./magnifying-glass-solid.svg";
@@ -11,6 +11,23 @@ import gear from "./gear-solid.svg";
 //import verifyTezTx from './tezTx.js';
 
 function SourceInput() {
+
+    //@dev Set's the tooltip text for the options page icon. Next four consts. 
+     const [hover, setHover] = useState(false);
+
+     const onHover = (e) => {
+        e.preventDefault();
+        setHover(true);
+      };
+
+      const onHoverOver = (e) => {
+        e.preventDefault();
+        setHover(false);
+      };
+
+      const HoverData = "Options Page";
+
+
     //@dev Used for populating UI response from Exodude image on popup when empty string is searched.
     const emojis = [
         "✌️ Enter query",
@@ -39,7 +56,7 @@ function SourceInput() {
 
         snackbar.addEventListener(
             "click",
-            function (event) {
+            function(event) {
                 let urlArray = [
                     "https://blockchair.com/search?q=" + source,
                     "https://tronscan.org/#/transaction/" + source,
@@ -59,29 +76,29 @@ function SourceInput() {
                     "show"
                 );
                 snackbar.style.right = "40%";
-                setTimeout(function () {
+                setTimeout(function() {
                     snackbar.className = snackbar.className.replace("show", "");
                     snackbar.style.right = snackbar.style.right.replace(
                         "40%",
                         "60%"
                     );
                 }, 1500);
-            },
-            { once: true }
+            }, { once: true }
         );
     };
 
-//@dev Opens options page from gear icon. 
+    //@dev Opens options page from gear icon. 
     const optionsPage = (event) => {
         chrome.runtime.openOptionsPage();
     }
+
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
         snackbar.innerText = "🤔 No results found. Click me to reset.";
         snackbar.className = "show";
         snackbar.style.right = "40%";
-        setTimeout(function () {
+        setTimeout(function() {
             snackbar.className = snackbar.className.replace("show", "");
             snackbar.style.right = snackbar.style.right.replace("40%", "60%");
         }, 1500);
@@ -111,7 +128,7 @@ function SourceInput() {
             snackbar.innerText = "GM! 🌤️";
         }
         snackbar.className = "show";
-        setTimeout(function () {
+        setTimeout(function() {
             snackbar.className = snackbar.className.replace("show", "");
         }, 1000);
     }
@@ -126,7 +143,7 @@ function SourceInput() {
             var snackbar = await document.getElementById("snackbar");
             snackbar.innerText = `${getRandomEmoji()}`;
             snackbar.className = "show";
-            setTimeout(function () {
+            setTimeout(function() {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 900);
         } else if (/^tz[a-z0-9]{34}$|^o[a-z0-9]{50}$/gi.test(source)) {
@@ -230,9 +247,13 @@ function SourceInput() {
 
     return (
         <div class="wrapper">
-            <img
+        
+        {hover && <p id="belowCorner" className={hover}>{HoverData}</p>}
+                    <img
                         id="corner"
                         onClick={optionsPage}
+                        onMouseEnter={(e) => onHover(e)}
+                        onMouseLeave={(e) => onHoverOver(e)}
                         src={gear}
                         alt="Options"
                         tite="Options page link"

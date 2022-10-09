@@ -41,33 +41,20 @@ label {
     width: 7px;
 }
 
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    font-size: 10px;
-    width: 90px;
-    bottom: 100%;
-    left: 50%;
-    margin-left: 20px;
-    margin-top: 10px;
-    /* Position tooltip with margin */
-    background-color: #1a1d40;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
+#belowCorner {
+   top: 8px;
+   right: 12px;
+   z-index: 1; 
+   text-align: center;
+   font-family: 'Roboto';
+   font-size: inherit;
+   background-color: #1a1d40;
+   color: #fff;
+    /* Paua background color and white text */
+    padding: 3px;
+    margin: auto;
+    border-radius: 10px;
+    position: fixed;
 }
 
 
