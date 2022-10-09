@@ -1,5 +1,7 @@
+/* global chrome */
+
 // //@dev Checks for window open matching the URL or source (as part of the URL). Redirects/focuses on to that window if opened.
-// NOT YET ADAPTED FOR WINDOWS.
+// //NOT YET ADAPTED FOR WINDOWS.
 
     
 // const existingWindowCheck = async (URL, source) => {

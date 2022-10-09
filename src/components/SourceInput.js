@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import '../styles/App.css';
 import logo from './fella.png';
-import spinner from './spinner-solid.svg';
 import searchIcon from './magnifying-glass-solid.svg';
 import validateSolAddress from './solana.js';
 import validateSignature from './solSignature.js';
@@ -19,18 +18,23 @@ function SourceInput() {
         return emojis[~~(Math.random() * emojis.length)]
     };
 
-   const lookUpText = async () => {
-     var snackbar = await document.getElementById("snackbar");
-        snackbar.innerText = "Multiple ⛓ Opening a new minimized window with explorers."
-        snackbar.className = "show";
-        snackbar.style.right = "10%";
-        setTimeout(function() { 
-            snackbar.className = snackbar.className.replace("show", ""); 
-            snackbar.style.right = snackbar.style.right.replace("10%", "60%")
-        }, 3000);
-        
- }
+const lookUpText = async (source) => {
+    var snackbar = await document.getElementById("snackbar");
+    snackbar.innerText = "This could be a few chains 🔍 Click this dialogue to open a new window for multiple ⛓ explorers. Or click me to reset."
+    snackbar.className = "showMulti";
 
+    snackbar.addEventListener('click', function(event) {
+        let urlArray = [('https://blockchair.com/search?q=' + source), ('https://tronscan.org/#/transaction/' + source), ('https://binance.mintscan.io/txs/' + source), ('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/' + source)];
+        chrome.windows.create({ focused: false, state: "minimized", url: urlArray });
+        snackbar.innerText = "I opened a new, minimized window 👀"
+        snackbar.className = snackbar.className.replace("showMulti", "show");
+        snackbar.style.right = "40%";
+        setTimeout(function() {
+            snackbar.className = snackbar.className.replace("show", "");
+            snackbar.style.right = snackbar.style.right.replace("40%", "60%")
+        }, 1500);
+    }, { once: true });
+}
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
         snackbar.innerText = "🤔 No results found. Click me to reset."
@@ -42,6 +46,12 @@ function SourceInput() {
         }, 1500);
         console.log('Not a valid address or transaction ID')
     }
+
+function loading() {
+    var snackbar = document.getElementById("snackbar");
+        snackbar.innerText = "🔍 Searching now..."
+        snackbar.className = "show";
+}
 
 function getTimeTitle() {
     var snackbar = document.getElementById("snackbar");
@@ -62,6 +72,7 @@ function getTimeTitle() {
         let source = await document.getElementById('sourceInput').value
         console.log(source.length)
 
+        loading();
 
         if (source === null || source === undefined || !source) {
             var snackbar = await document.getElementById("snackbar");
@@ -115,12 +126,12 @@ function getTimeTitle() {
         } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/.test(source)) {
             //@dev HBAR address
             //chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/accounts/' + source})
-            await existingTabCheck('https://app.dragonglass.me/hedera/accounts/', source);
+            await existingTabCheck('https://hashscan.io/#/mainnet/account/', source);
         } else if (/^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?@?/.test(source)) {
             //@dev HBAR TXID
             const hbarID = source.replace(/[^a-zA-Z0-9]/g, "")
             //chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/transactions/' + hbarID})
-            await existingTabCheck('https://app.dragonglass.me/hedera/transactions/', hbarID);
+            await existingTabCheck('https://hashscan.io/#/mainnet/transaction/', hbarID);
         } else if (/^[1-9A-HJ-NP-Za-km-z]{59}$|^(addr1)[a-z0-9]+/g.test(source)) {
             //@dev Ada addresses
             await existingTabCheck('https://cardanoscan.io/address/',source)
@@ -130,17 +141,16 @@ function getTimeTitle() {
             await existingTabCheck('https://blockchair.com/search?q=', source);
         } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
             //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA)
-            let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/'+ source)];
+            // let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/'+ source)];
             //@dev Opens new, unfocused and minimized window with all the tabs in array and matching the source.
-            await lookUpText();
-            chrome.windows.create({ focused: false, state: "minimized", url: urlArray });
+            lookUpText(source);
+            // chrome.action.onClicked.addListener(lookUpText)
         } else {
             noCoinText();
         }
         
     }
 
-//@dev Loading div for reference, not implemented. Css present. <div id="loading" class="loading"><img src={spinner} />
 
 //@dev Calls the onload listener to populate the snackbar with a GM or the time greeting from Exodude. 
 useEffect(() => {
@@ -158,7 +168,6 @@ useEffect(() => {
                 <img class="landing__search-icon" alt="A magnifying glass" src={searchIcon}/>
             </button>
         </form>
-
 
         <div id="snackbar"></div>
         </div>

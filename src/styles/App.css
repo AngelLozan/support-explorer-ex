@@ -31,10 +31,6 @@ label {
     cursor: pointer;
 }
 
-.results{
-    display: none;
-}
-
 .extension__bg-grey {
     background: radial-gradient(#fff, #eee);
     overflow-y: hidden;
@@ -256,6 +252,7 @@ label {
 
 #snackbar:after {
     content: '';
+    z-index: -1;
     position: absolute;
     left: 0;
     top: 50%;
@@ -281,7 +278,46 @@ label {
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
+#snackbar.showMulti {
+    visibility: visible;
+    cursor: pointer;
+    right: 10%;
+    top: 16%;
+    /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadeinMulti 0.5s;
+    animation: fadeinMulti 0.5s;
+}
+
+
 /* Animations to fade the snackbar in and out */
+
+@-webkit-keyframes fadeinMulti {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+
+    to {
+        top: 16%;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeinMulti {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+
+    to {
+        top: 16%;
+        opacity: 1;
+    }
+}
+
+
 @-webkit-keyframes fadein {
     from {
         top: 0;

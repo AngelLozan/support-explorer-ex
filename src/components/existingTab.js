@@ -7,6 +7,7 @@
        var tabId;
        let focusedTab;
        let currentTab;
+       let snackbar = await document.getElementById("snackbar");
 
        try {
           await chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -25,10 +26,9 @@
                        }
                    })
                })
-               if (found == false) {
+               if (found === false) {
                    chrome.tabs.create({ active: true, url: URL + source });
-               } else if (focusedTab == currentTab) {
-                   var snackbar = document.getElementById("snackbar");
+               } else if (focusedTab === currentTab) {
                    snackbar.innerText = "You're currently there ✅";
                    snackbar.className = "show";
                    snackbar.style.right = "50%";
@@ -38,7 +38,6 @@
                     }, 1500);
                } else {
                    chrome.tabs.update(tabId, { selected: true });
-                   var snackbar = document.getElementById("snackbar");
                    snackbar.innerText = 'The explorer is now open in your other window 👀';
                    snackbar.className = "show";
                    snackbar.style.right = "20%";
