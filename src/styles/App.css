@@ -31,6 +31,46 @@ label {
     cursor: pointer;
 }
 
+#corner {
+    position: fixed;
+    top: 7px; 
+    right: 7px;
+    cursor: pointer;
+    z-index: 1000;
+    height: 7px;
+    width: 7px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    font-size: 10px;
+    width: 90px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: 20px;
+    margin-top: 10px;
+    /* Position tooltip with margin */
+    background-color: #1a1d40;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+
 .extension__bg-grey {
     background: radial-gradient(#fff, #eee);
     overflow-y: hidden;

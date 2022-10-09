@@ -6,6 +6,7 @@ import searchIcon from "./magnifying-glass-solid.svg";
 import validateSolAddress from "./solana.js";
 import validateSignature from "./solSignature.js";
 import existingTabCheck from "./existingTab.js";
+import gear from "./gear-solid.svg";
 //import getAlgoData from './algoTx.js';
 //import verifyTezTx from './tezTx.js';
 
@@ -69,6 +70,11 @@ function SourceInput() {
             { once: true }
         );
     };
+
+//@dev Opens options page from gear icon. 
+    const optionsPage = (event) => {
+        chrome.runtime.openOptionsPage();
+    }
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
@@ -224,6 +230,13 @@ function SourceInput() {
 
     return (
         <div class="wrapper">
+            <img
+                        id="corner"
+                        onClick={optionsPage}
+                        src={gear}
+                        alt="Options"
+                        tite="Options page link"
+                   />
             <form
                 class="flex"
                 action="https://blockchair.com/search"
