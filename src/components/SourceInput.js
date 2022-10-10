@@ -151,6 +151,7 @@ function SourceInput() {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 900);
         } else if (/^[0-9a-zA-Z]{3,9}$/gi.test(source)) {
+            //@dev Match asset ticker search to populate iframe
             let address = 'https://coinranking.com/?search=' + source;
             await setFrameSource(address);
             setShowResults(true);
@@ -237,7 +238,7 @@ function SourceInput() {
             //@dev Most chains addresses. Needs to stay last so other regex's work. Includes LTC, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
             //chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
             await existingTabCheck("https://blockchair.com/search?q=", source);
-        } else if (/\s*^[0-9a-fA-F]{64}$\s*/g.test(source)) {
+        } else if (/^\s*[0-9a-fA-F]{64}\s*$/g.test(source)) {
             //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA)
             // let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/'+ source)];
             //@dev Opens new, unfocused and minimized window with all the tabs in array and matching the source.
