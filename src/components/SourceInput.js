@@ -7,6 +7,7 @@ import validateSolAddress from "./solana.js";
 import validateSignature from "./solSignature.js";
 import existingTabCheck from "./existingTab.js";
 import gear from "./gear-solid.svg";
+import Results from "./Results.js";
 //import getAlgoData from './algoTx.js';
 //import verifyTezTx from './tezTx.js';
 
@@ -17,25 +18,6 @@ function SourceInput() {
 
     //@dev Set's the tooltip text for the options page icon. Next four consts.
      const [hover, setHover] = useState(false);
-
-//@dev Encapsulates the iframe to be shown or not depending on the above state. 
-    const Results = () => (
-        <div id="results" className="search-results">
-      <iframe id="showFrame" ref={ref} src={frameSource} height="300" width="500" title="blockscan" target="_parent" onLoad={hideLoader} allowfullscreen></iframe>
-    </div>
-    )
-
-    //@dev Hides the loader when the page is loaded. 
-    const hideLoader = () => {
-        var snackbar = document.getElementById("snackbar");
-        snackbar.innerText = "Search complete 👍 Click me to reset.";
-        snackbar.className = "show";
-        snackbar.style.right = "40%";
-        setTimeout(function() {
-            snackbar.className = snackbar.className.replace("show", "");
-            snackbar.style.right = snackbar.style.right.replace("40%", "60%");
-        }, 1500);
-    }
 
      const onHover = (e) => {
         e.preventDefault();
@@ -168,7 +150,7 @@ function SourceInput() {
             setTimeout(function() {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 900);
-        } else if (/^[^0-9][a-zA-Z]{2,9}$/gi.test(source)) {
+        } else if (/^[0-9a-zA-Z]{3,9}$/gi.test(source)) {
             let address = 'https://coinranking.com/?search=' + source;
             await setFrameSource(address);
             setShowResults(true);
@@ -255,7 +237,7 @@ function SourceInput() {
             //@dev Most chains addresses. Needs to stay last so other regex's work. Includes LTC, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
             //chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
             await existingTabCheck("https://blockchair.com/search?q=", source);
-        } else if (/^[0-9a-fA-F]{64}$/g.test(source)) {
+        } else if (/\s*^[0-9a-fA-F]{64}$\s*/g.test(source)) {
             //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA)
             // let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/'+ source)];
             //@dev Opens new, unfocused and minimized window with all the tabs in array and matching the source.
@@ -348,7 +330,7 @@ function SourceInput() {
                 </button>
             </form>
 
-            {showResults && <div> <Results /> </div> }
+            {showResults && <div> <Results URL={frameSource} /> </div> }
 
             <div id="snackbar"></div>
         </div>

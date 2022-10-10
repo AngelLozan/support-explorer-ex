@@ -46,8 +46,8 @@ label {
 }
 
 #belowCorner {
-   top: 8%;
-   right: 3%;
+   top: 9px;
+   right: 18px;
    z-index: 1; 
    text-align: center;
    font-family: 'Roboto';
