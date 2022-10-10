@@ -146,7 +146,6 @@ function getTimeTitle() {
     }
 
     x.className = "show";
-    // After 1.5 seconds, remove the show class from DIV
     setTimeout(function() { x.className = x.className.replace("show", ""); }, 1000);
 
 }

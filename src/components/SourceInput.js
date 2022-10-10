@@ -12,7 +12,7 @@ import gear from "./gear-solid.svg";
 
 function SourceInput() {
 
-    //@dev Set's the tooltip text for the options page icon. Next four consts. 
+    //@dev Set's the tooltip text for the options page icon. Next four consts.
      const [hover, setHover] = useState(false);
 
      const onHover = (e) => {

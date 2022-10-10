@@ -15,8 +15,8 @@ const existingTabCheck = async (URL, source) => {
             function (tabs) {
                 currentTab = tabs[0];
                 if (
-                    currentTab.url.search(URL) > -1 ||
-                    currentTab.url.search(source) > -1
+                    currentTab.url.search(source) > -1 || 
+                    currentTab.url.search(URL) > -1
                 ) {
                     focusedTab = currentTab;
                 }
@@ -27,8 +27,8 @@ const existingTabCheck = async (URL, source) => {
             windows.forEach(function (window) {
                 window.tabs.forEach(function (tab) {
                     if (
-                        tab.url.search(URL) > -1 ||
-                        tab.url.search(source) > -1
+                        tab.url.search(source) > -1 || 
+                        tab.url.search(URL) > -1
                     ) {
                         found = true;
                         tabId = tab.id;
@@ -51,13 +51,13 @@ const existingTabCheck = async (URL, source) => {
             } else {
                 chrome.tabs.update(tabId, { selected: true });
                 snackbar.innerText =
-                    "The explorer is now open in your other window 👀";
+                    "The explorer is now open/focused in your other window 👀";
                 snackbar.className = "show";
-                snackbar.style.right = "20%";
+                snackbar.style.right = "15%";
                 setTimeout(function () {
                     snackbar.className = snackbar.className.replace("show", "");
                     snackbar.style.right = snackbar.style.right.replace(
-                        "20%",
+                        "15%",
                         "60%"
                     );
                 }, 2500);

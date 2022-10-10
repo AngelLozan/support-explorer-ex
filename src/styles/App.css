@@ -42,21 +42,20 @@ label {
 }
 
 #belowCorner {
-   top: 8px;
-   right: 12px;
+   top: 8%;
+   right: 3%;
    z-index: 1; 
    text-align: center;
    font-family: 'Roboto';
-   font-size: inherit;
+   font-size: 10px;
    background-color: #1a1d40;
    color: #fff;
     /* Paua background color and white text */
     padding: 3px;
     margin: auto;
-    border-radius: 10px;
+    border-radius: 5px;
     position: fixed;
 }
-
 
 .extension__bg-grey {
     background: radial-gradient(#fff, #eee);
