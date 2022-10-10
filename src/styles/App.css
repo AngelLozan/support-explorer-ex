@@ -31,6 +31,10 @@ label {
     cursor: pointer;
 }
 
+#results {
+    margin-top: 3px;
+}
+
 #corner {
     position: fixed;
     top: 7px; 
@@ -272,7 +276,7 @@ label {
     left: 10%;
     /* Bring the snackbar closer to exodude*/
     right: 60%;
-    top: 30%;
+    top: 20px;
     font-family: $Roboto;
 }
 
@@ -308,7 +312,7 @@ label {
     visibility: visible;
     cursor: pointer;
     right: 10%;
-    top: 16%;
+    top: 13px;
     /* Show the snackbar */
     /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
   However, delay the fade out process for 2.5 seconds */
@@ -326,7 +330,7 @@ label {
     }
 
     to {
-        top: 16%;
+        top: 13px;
         opacity: 1;
     }
 }
@@ -338,7 +342,7 @@ label {
     }
 
     to {
-        top: 16%;
+        top: 13px;
         opacity: 1;
     }
 }
@@ -351,7 +355,7 @@ label {
     }
 
     to {
-        top: 30%;
+        top: 20px;
         opacity: 1;
     }
 }
@@ -363,14 +367,14 @@ label {
     }
 
     to {
-        top: 30%;
+        top: 20px;
         opacity: 1;
     }
 }
 
 @-webkit-keyframes fadeout {
     from {
-        top: 30%;
+        top: 20px;
         opacity: 1;
     }
 
@@ -382,7 +386,7 @@ label {
 
 @keyframes fadeout {
     from {
-        top: 30%;
+        top: 20px;
         opacity: 1;
     }
 

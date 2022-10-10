@@ -1,5 +1,5 @@
 /* global chrome */
-import { useEffect, useState } from "react";
+import { useRef,useEffect, useState } from "react";
 import "../styles/App.css";
 import logo from "./fella.png";
 import searchIcon from "./magnifying-glass-solid.svg";
@@ -11,9 +11,31 @@ import gear from "./gear-solid.svg";
 //import verifyTezTx from './tezTx.js';
 
 function SourceInput() {
+    const ref = useRef(null); //@dev Used in use effect to designate the iframe as the ref so no new tab/window opens on link click in iframe.  
+    const [showResults, setShowResults] = useState(); //@dev Used to hide or show results in popup. Inactive until search activated. 
+    const [frameSource, setFrameSource] = useState(); //@dev Used to set the URL for the iframe depending on regex match. Where to search the transaction hash. 
 
     //@dev Set's the tooltip text for the options page icon. Next four consts.
      const [hover, setHover] = useState(false);
+
+//@dev Encapsulates the iframe to be shown or not depending on the above state. 
+    const Results = () => (
+        <div id="results" className="search-results">
+      <iframe id="showFrame" ref={ref} src={frameSource} height="300" width="500" title="blockscan" target="_parent" onLoad={hideLoader} allowfullscreen></iframe>
+    </div>
+    )
+
+    //@dev Hides the loader when the page is loaded. 
+    const hideLoader = () => {
+        var snackbar = document.getElementById("snackbar");
+        snackbar.innerText = "Search complete 👍 Click me to reset.";
+        snackbar.className = "show";
+        snackbar.style.right = "40%";
+        setTimeout(function() {
+            snackbar.className = snackbar.className.replace("show", "");
+            snackbar.style.right = snackbar.style.right.replace("40%", "60%");
+        }, 1500);
+    }
 
      const onHover = (e) => {
         e.preventDefault();
@@ -146,6 +168,10 @@ function SourceInput() {
             setTimeout(function() {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 900);
+        } else if (/^[^0-9][a-zA-Z]{2,9}$/gi.test(source)) {
+            let address = 'https://coinranking.com/?search=' + source;
+            await setFrameSource(address);
+            setShowResults(true);
         } else if (/^tz[a-z0-9]{34}$|^o[a-z0-9]{50}$/gi.test(source)) {
             //@dev Tezos address or transaction respectively.
             //chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source})
@@ -243,6 +269,25 @@ function SourceInput() {
     //@dev Calls the onload listener to populate the snackbar with a GM or the time greeting from Exodude.
     useEffect(() => {
         document.addEventListener("DOMContentLoaded", getTimeTitle());
+
+        const handleClick = event => {
+            const a = event.target.closest('a[href]');
+            if (a) {
+                event.preventDefault();
+                chrome.tabs.create({ url: a.href, active: false });
+            }
+        }
+
+        const element = ref.current;
+        if (element) {
+            element.addEventListener('click', handleClick);
+        } else {
+            console.log("No element");
+        }
+        return () => {
+            element.removeEventListener('click', handleClick);
+        };
+
     }, []);
 
     return (
@@ -282,9 +327,9 @@ function SourceInput() {
                     autoFocus
                     id="sourceInput"
                     class="extension__input"
-                    placeholder="Search a Transaction or Address for multiple different blockchains"
+                    placeholder="Search a Ticker, Transaction or Address for multiple different blockchains"
                     data-toggle="tooltip"
-                    title="Search a Transaction or Address for multiple different blockchains."
+                    title="Search a Ticker, Transaction or Address for multiple different blockchains."
                     tabindex="1"
                 ></input>
                 <button
@@ -292,7 +337,7 @@ function SourceInput() {
                     class="extension__search-btn"
                     data-toggle="tooltip"
                     place="embeded"
-                    title="Search for transactions, addresses, blocks, and even embedded text data."
+                    title="Search for transactions, addresses, tickers, and even contracts."
                     tabindex="2"
                 >
                     <img
@@ -303,8 +348,11 @@ function SourceInput() {
                 </button>
             </form>
 
+            {showResults && <div> <Results /> </div> }
+
             <div id="snackbar"></div>
         </div>
+
     );
 }
 
