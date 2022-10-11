@@ -27,7 +27,10 @@ See this section of Coda for reference: https://coda.io/d/Customer-Support-Hacka
 - Jamie M.
 - Scott L. 
 
-To Do: 
+Notes: 
 
-- Edge case for special characters to exclude? Exclude string under certain length (ex. Accidental typing in search box takes you to blockchair
-- HBAR TX regex create.
+- Querying blockchain apis directly over regexs may be more reliable in the end. Regexs are easier and for the most part effective. Example: tezos. I can have components for querying tzstats, but regexs identify tx and address strings reliably and effectively. Need to study this use case further. 
+- Packages express and proxy middleware are for development envs. Not needed for prod. 
+
+
+

@@ -1,4 +1,5 @@
-//@dev If transaction, then true and tab opened
+//@dev If transaction, then true and tab opened. Working, but not neccessary in my opinion
+//@dev (for accounts) api = "https://api.tzstats.com/explorer/account/{account}
 
 import axios from "axios";
 
@@ -14,11 +15,11 @@ const verifyTezTx = async (source) => {
       },
     });
 
-    if (response.status === 200) {
-      console.log("status: ", response.status)
+    if (response.id) {
+      console.log("Id: ", response.id)
       return true;
     } else {
-      throw new Error(`Error! status: ${response.status}`);
+      throw new Error(`Error! Id: ${response.id}`);
     }
   } catch (err) {
     console.log(err);
