@@ -8,8 +8,8 @@ import validateSignature from "./solSignature.js";
 import existingTabCheck from "./existingTab.js";
 import gear from "./gear-solid.svg";
 import Results from "./Results.js";
-//import getAlgoData from './algoTx.js';
-//import verifyTezTx from './tezTx.js';
+import getAlgoData from './algoTx.js';
+//import verifyTezTx from './tezTx.js'; @dev Not neccessary at the moment. 
 
 function SourceInput() {
     const ref = useRef(null); //@dev Used in use effect to designate the iframe as the ref so no new tab/window opens on link click in iframe.  
@@ -150,57 +150,47 @@ function SourceInput() {
             setTimeout(function() {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 900);
-        } else if (/^[0-9a-zA-Z]{3,9}$/gi.test(source)) {
+        } else if (/^\s*[0-9a-zA-Z]{3,9}\s*$/gi.test(source)) {
             //@dev Match asset ticker search to populate iframe
-            let address = 'https://coinranking.com/?search=' + source;
+            let noSpaceSource = await source.replace(/\s/g,'');
+            let address = 'https://coinranking.com/?search=' + noSpaceSource;
             await setFrameSource(address);
             setShowResults(true);
         } else if (/^tz[a-z0-9]{34}$|^o[a-z0-9]{50}$/gi.test(source)) {
             //@dev Tezos address or transaction respectively.
-            //chrome.tabs.create({active: true, url: 'https://tzstats.com/' + source})
             await existingTabCheck("https://tzstats.com/", source);
         } else if (/^[A-Z2-7]{58}$/g.test(source)) {
-            //@dev Placeholder for Algo address
-            //chrome.tabs.create({active: true, url: 'https://algoexplorer.io/address/' + source})
+            //@dev Placeholder for Algo address 
             await existingTabCheck("https://algoexplorer.io/address/", source);
-        } else if (/^[A-Z2-7]{52}$/g.test(source)) {
-            //@dev Placeholder for Algo TX
-            //chrome.tabs.create({active: true, url: 'https://algoexplorer.io/tx/' + source})
+        } else if (await getAlgoData(source)) {
+            //@dev Placeholder for Algo TX /^[A-Z2-7]{52}$/g.test(source)
             await existingTabCheck("https://algoexplorer.io/tx/", source);
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
             //@dev EVM address
-            //chrome.tabs.create({active: true, url: 'https://debank.com/profile/' + source})
             await existingTabCheck("https://debank.com/profile/", source);
         } else if (/^0x([A-Fa-f0-9]{64})$/g.test(source)) {
             //@dev EVM transaction
-            //chrome.tabs.create({active: true, url: 'https://blockscan.com/tx/' + source})
             await existingTabCheck("https://blockscan.com/tx/", source);
         } else if (/^r[1-9A-HJ-NP-Za-km-z]{25,33}$/g.test(source)) {
             //@dev XRP address
-            //chrome.tabs.create({active: true, url: 'https://xrpscan.com/account/' + source})
             await existingTabCheck("https://xrpscan.com/account/", source);
         } else if ((await validateSolAddress(source)) === true) {
             //@dev SOL address
-            //chrome.tabs.create({active: true, url: 'https://solscan.io/account/' + source})
             await existingTabCheck("https://solscan.io/account/", source);
         } else if (await validateSignature(source)) {
             //@dev SOL TX
-            //chrome.tabs.create({active: true, url: 'https://solscan.io/tx/' + source})
             await existingTabCheck("https://solscan.io/tx/", source);
         } else if (/^(cosmos)[a-z0-9]{39}$/g.test(source)) {
             //@dev Atom Address
-            //chrome.tabs.create({active: true, url: 'https://atomscan.com/accounts/' + source})
             await existingTabCheck("https://atomscan.com/accounts/", source);
         } else if (/^(bnb1)[a-z0-9]{38}$/g.test(source)) {
             //@dev BNB Beacon Address
-            //chrome.tabs.create({active: true, url: 'https://binance.mintscan.io/account/' + source})
             await existingTabCheck(
                 "https://binance.mintscan.io/account/",
                 source
             );
         } else if (/^T[A-Za-z1-9]{33}$/g.test(source)) {
             //@dev TRX address
-            //chrome.tabs.create({active: true, url: 'https://tronscan.org/#/address/' + source})
             await existingTabCheck("https://tronscan.org/#/address/", source);
         } else if (
             /^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/.test(
@@ -208,7 +198,6 @@ function SourceInput() {
             )
         ) {
             //@dev HBAR address
-            //chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/accounts/' + source})
             await existingTabCheck(
                 "https://hashscan.io/#/mainnet/account/",
                 source
@@ -220,7 +209,6 @@ function SourceInput() {
         ) {
             //@dev HBAR TXID
             const hbarID = source.replace(/[^a-zA-Z0-9]/g, "");
-            //chrome.tabs.create({active: true, url: 'https://app.dragonglass.me/hedera/transactions/' + hbarID})
             await existingTabCheck(
                 "https://hashscan.io/#/mainnet/transaction/",
                 hbarID
@@ -236,14 +224,12 @@ function SourceInput() {
             )
         ) {
             //@dev Most chains addresses. Needs to stay last so other regex's work. Includes LTC, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
-            //chrome.tabs.create({active: true, url: 'https://blockchair.com/search?q=' + source})
             await existingTabCheck("https://blockchair.com/search?q=", source);
         } else if (/^\s*[0-9a-fA-F]{64}\s*$/g.test(source)) {
             //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA)
-            // let urlArray = [('https://blockchair.com/search?q=' + source),('https://tronscan.org/#/transaction/' + source),('https://binance.mintscan.io/txs/' + source),('https://atomscan.com/transactions/' + source), ('https://xrpscan.com/tx/' + source), ('https://cardanoscan.io/transaction/'+ source)];
-            //@dev Opens new, unfocused and minimized window with all the tabs in array and matching the source.
-            lookUpText(source);
-            // chrome.action.onClicked.addListener(lookUpText)
+            let noSpaceSourceM = await source.replace(/\s/g,'');
+            lookUpText(noSpaceSourceM);
+            
         } else {
             noCoinText();
         }

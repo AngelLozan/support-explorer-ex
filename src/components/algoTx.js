@@ -4,24 +4,25 @@ import axios from 'axios';
 
 const getAlgoData = async (source) => {
 
-let proxy = "";
 let api = 'https://algoindexer.algoexplorerapi.io/v2/transactions?txid=';
 let tx = source;
 
   try {
-    const response = await axios.get(`${proxy}${api}${tx}`, {
+    const response = await axios.get(`${api}${tx}`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
       },
     });
 
-    if (!response.ok) {
+    if (response.status === 200) {
+      console.log("status: ", response.status)
+      return true;
+    } else {
       throw new Error(`Error! status: ${response.status}`);
     }
-
-    const result = await response.json();
-    return true;
+    // const result = await response.json();
+    // return true;
   } catch (err) {
     console.log(err);
   }

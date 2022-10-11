@@ -15,6 +15,10 @@
 
   "permissions": ["storage", "activeTab", "tabs", "identity"],
 
+  "content_security_policy": {
+    "extension_pages" : "script-src 'self'; connect-src 'self' https://algoindexer.algoexplorerapi.io/v2/ https://api.mainnet-beta.solana.com/ https://api.tzstats.com/explorer/op/; object-src 'self'"
+ },
+
   "action": {
     "default_popup": "index.html",
     "default_icon": "SearchExo.png",
