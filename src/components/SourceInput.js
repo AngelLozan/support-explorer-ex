@@ -57,6 +57,7 @@ function SourceInput() {
         snackbar.innerText =
             "This could be a few chains 🔍 Click this dialogue to open a new window for multiple ⛓ explorers. Or click me to reset.";
         snackbar.className = "showMulti";
+        snackbar.style.right = "15px";
 
         snackbar.addEventListener(
             "click",

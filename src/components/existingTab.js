@@ -2,12 +2,15 @@
 
 //@dev Checks for tab open matching the URL or source (as part of the URL). Redirects/focuses on to that tab if opened, regardless of window.
 
-const existingTabCheck = async (URL, source) => {
+const existingTabCheck = async (url, source) => {
     var found = false;
     var tabId;
     let focusedTab;
     let currentTab;
     let snackbar = await document.getElementById("snackbar");
+    let host =  await new URL(url).hostname;
+    let path = await new URL(url).href;
+
 
     try {
         await chrome.tabs.query(
@@ -16,7 +19,7 @@ const existingTabCheck = async (URL, source) => {
                 currentTab = tabs[0];
                 if (
                     currentTab.url.search(source) > -1 || 
-                    currentTab.url.search(URL) > -1
+                    currentTab.url.search(host) > -1
                 ) {
                     focusedTab = currentTab;
                 }
@@ -28,7 +31,7 @@ const existingTabCheck = async (URL, source) => {
                 window.tabs.forEach(function (tab) {
                     if (
                         tab.url.search(source) > -1 || 
-                        tab.url.search(URL) > -1
+                        tab.url.search(host) > -1
                     ) {
                         found = true;
                         tabId = tab.id;
@@ -36,7 +39,7 @@ const existingTabCheck = async (URL, source) => {
                 });
             });
             if (found === false) {
-                chrome.tabs.create({ active: true, url: URL + source });
+                chrome.tabs.create({ active: true, url: path + source });
             } else if (focusedTab === currentTab) {
                 snackbar.innerText = "You're currently there ✅";
                 snackbar.className = "show";

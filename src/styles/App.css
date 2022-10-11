@@ -311,7 +311,7 @@ label {
 #snackbar.showMulti {
     visibility: visible;
     cursor: pointer;
-    right: 10%;
+    right: 15px;
     top: 13px;
     /* Show the snackbar */
     /* Add animation: Take 0.5 seconds to fade in and out the snackbar.

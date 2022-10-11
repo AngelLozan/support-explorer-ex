@@ -1,4 +1,4 @@
-//@dev Cors headers need to be modified. CORS - "No 'Access-Control-Allow-Origin' header. Use proxy? 
+//@dev CSP allows CORs self source. Sometimes this matches non-tx strings and produces valid response. Edge case. 
 
 import axios from 'axios';
 
@@ -18,13 +18,9 @@ let tx = source;
     if (response.status === 200) {
       console.log("status: ", response.status)
       return true;
-    } else {
-      throw new Error(`Error! status: ${response.status}`);
-    }
-    // const result = await response.json();
-    // return true;
+    } 
   } catch (err) {
-    console.log(err);
+    console.log("Error in Algo tx: ", err);
   }
 }
 
