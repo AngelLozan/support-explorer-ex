@@ -1,5 +1,5 @@
 {
-  "name": "Support Explorer Tool",
+  "name": "Falcon Explorer",
   "description": "Support Explorer Tool",
   "version": "1.2",
   "manifest_version": 3,
@@ -13,17 +13,30 @@
     "open_in_tab": false
   },
 
-  "permissions": ["storage", "activeTab", "tabs", "identity"],
+  "permissions": ["alarms", "tabs", "scripting", "activeTab", "storage", "identity"],
 
   "content_security_policy": {
-    "extension_pages" : "script-src 'self'; connect-src 'self' https://algoindexer.algoexplorerapi.io/v2/ https://api.mainnet-beta.solana.com/ https://api.tzstats.com/explorer/op/; object-src 'self'"
+    "extension_pages" : "script-src 'self'; connect-src 'self' https://api.tzstats.com/ https://algoindexer.algoexplorerapi.io/v2/ https://api.mainnet-beta.solana.com/; object-src 'self'"
  },
+
+ "content_scripts": [
+    {
+      "matches": ["https://app.falcon.io/*"],
+      "run_at": "document_idle",
+      "css": ["popup.css"],
+      "js": ["buttonScript.js", "reload.js"]
+    }
+  ],
 
   "action": {
     "default_popup": "index.html",
     "default_icon": "SearchExo.png",
-    "default_title":"Support Explorer Tool"
+    "default_title":"Falcon Explorer"
   },
+
+  "host_permissions": [
+  "https://app.falcon.io/*"
+],
 
    "icons":{
     "16": "SearchExo.png",
@@ -35,8 +48,8 @@
   "commands": {
         "_execute_action": {
             "suggested_key": {
-                "default": "Ctrl+K",
-                "mac": "Command+K"
+                "default": "Ctrl+I",
+                "mac": "Command+I"
             }
         }
     }

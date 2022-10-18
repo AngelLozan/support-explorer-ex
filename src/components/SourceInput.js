@@ -9,7 +9,8 @@ import existingTabCheck from "./existingTab.js";
 import gear from "./gear-solid.svg";
 import Results from "./Results.js";
 import getAlgoData from './algoTx.js';
-//import verifyTezTx from './tezTx.js'; @dev Not neccessary at the moment. 
+import eBrand from './ExodusBrandWatch.png';
+//import verifyTezTx from './tezTx.js'; //@dev Not neccessary at the moment. 
 
 function SourceInput() {
     const ref = useRef(null); //@dev Used in use effect to designate the iframe as the ref so no new tab/window opens on link click in iframe.  
@@ -18,10 +19,16 @@ function SourceInput() {
 
     //@dev Set's the tooltip text for the options page icon. Next four consts.
      const [hover, setHover] = useState(false);
+     const [hoverFalcon, setHoverFalcon] = useState(false);
 
      const onHover = (e) => {
         e.preventDefault();
         setHover(true);
+      };
+
+      const onHoverFalcon = (e) => {
+        e.preventDefault();
+        setHoverFalcon(true);
       };
 
       const onHoverOver = (e) => {
@@ -29,7 +36,12 @@ function SourceInput() {
         setHover(false);
       };
 
+      const onHoverOverFalcon = (e) => {
+         e.preventDefault();
+         setHoverFalcon(false);
+      };
       const HoverData = "Options Page";
+      const HoverDataTwo = "Go to Falcon";
 
 
     //@dev Used for populating UI response from Exodude image on popup when empty string is searched.
@@ -92,11 +104,76 @@ function SourceInput() {
         );
     };
 
+    const moneroText = async (source) => {
+        var snackbar = await document.getElementById("snackbar");
+        snackbar.innerText =
+            "This looks like a Monero address, which you cannot view on an explorer ususally 🔍 Click this dialogue to open a new tab anyways.";
+        snackbar.className = "showMulti";
+        snackbar.style.right = "15px";
+
+        snackbar.addEventListener(
+            "click",
+            function(event) {
+                let URL = "https://localmonero.co/blocks/search/" + source;
+                chrome.tabs.create({ active: true, url: URL });
+
+            }, { once: true }
+        );
+    }
+
     //@dev Opens options page from gear icon. 
     const optionsPage = (event) => {
         chrome.runtime.openOptionsPage();
     }
 
+const falconPage = async (event) => {
+    var found = false;
+    var tabId;
+    let focusedTab;
+    let currentTab;
+
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        currentTab = tabs[0];
+        if (currentTab.url.search("https://app.falcon.io/") > -1) {
+            focusedTab = currentTab;
+        }
+    });
+
+    chrome.windows.getAll({ populate: true }, function(windows) {
+        windows.forEach(function(window) {
+            window.tabs.forEach(function(tab) {
+                if (tab.url.search("https://app.falcon.io/") > -1) {
+                    found = true;
+                    tabId = tab.id;
+                }
+            })
+        })
+        if (found == false) {
+            chrome.tabs.create({ active: true, url: "https://app.falcon.io/#/engage/overview" });
+        } else if (focusedTab == currentTab) {
+            var snackbar = document.getElementById("snackbar");
+            snackbar.innerText = "You're currently on Falcon app. 😎"
+            snackbar.style.right = "30%";
+            snackbar.className = "show";
+            setTimeout(function() {
+            snackbar.className = snackbar.className.replace("show", "");
+            snackbar.style.right = snackbar.style.right.replace("30%", "60%");
+        }, 1500);
+        } else {
+            chrome.tabs.update(tabId, { selected: true });
+            var snackbar = document.getElementById("snackbar");
+
+            snackbar.innerText = 'Falcon is now open in your other window 👀'
+            snackbar.style.right = "30%";
+            snackbar.className = "show";
+            setTimeout(function() {
+            snackbar.className = snackbar.className.replace("show", "");
+            snackbar.style.right = snackbar.style.right.replace("30%", "60%");
+        }, 1500);
+        }
+    });
+}
 
     const noCoinText = async () => {
         var snackbar = await document.getElementById("snackbar");
@@ -135,7 +212,7 @@ function SourceInput() {
         snackbar.className = "show";
         setTimeout(function() {
             snackbar.className = snackbar.className.replace("show", "");
-        }, 1000);
+        }, 900);
     }
 
     const search = async () => {
@@ -150,15 +227,15 @@ function SourceInput() {
             snackbar.className = "show";
             setTimeout(function() {
                 snackbar.className = snackbar.className.replace("show", "");
-            }, 900);
-        } else if (/^\s*[0-9a-zA-Z]{3,9}\s*$/gi.test(source)) {
-            //@dev Match asset ticker search to populate iframe
+            }, 800);
+        } else if (/^\s*[0-9a-z\sA-Z]{3,9}\s*$/gi.test(source)) {
+            //@dev Match asset ticker or crypto name search to populate iframe. 
             let noSpaceSource = await source.replace(/\s/g,'');
             let address = 'https://coinranking.com/?search=' + noSpaceSource;
             await setFrameSource(address);
             setShowResults(true);
         } else if (/^tz[a-z0-9]{34}$|^o[a-z0-9]{50}$/gi.test(source)) {
-            //@dev Tezos address or transaction respectively.
+            //@dev Tezos address or transaction respectively. 
             await existingTabCheck("https://tzstats.com/", source);
         } else if (/^[A-Z2-7]{58}$/g.test(source)) {
             //@dev Placeholder for Algo address 
@@ -214,13 +291,15 @@ function SourceInput() {
                 "https://hashscan.io/#/mainnet/transaction/",
                 hbarID
             );
+        } else if (/4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$/g.test(source)) {
+            await moneroText(source);
         } else if (
             /^[1-9A-HJ-NP-Za-km-z]{59}$|^(addr1)[a-z0-9]+/g.test(source)
         ) {
             //@dev Ada addresses
             await existingTabCheck("https://cardanoscan.io/address/", source);
         } else if (
-            /^grs[a-zA-Z0-9]{5,88}$|^F[a-km-zA-HJ-NP-Z1-9]{26,33}$|4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}$|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87})$|^1[a-km-zA-HJ-NP-Z1-9]{25,34}(?!\/)$|^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/g.test(
+            /^grs[a-zA-Z0-9]{5,88}$|^F[a-km-zA-HJ-NP-Z1-9]{26,33}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}$|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87})$|^1[a-km-zA-HJ-NP-Z1-9]{25,34}(?!\/)$|^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/g.test(
                 source
             )
         ) {
@@ -273,6 +352,20 @@ function SourceInput() {
                         alt="Options"
                         tite="Options page link"
                    />
+        {hoverFalcon && <p id="belowCornerTwo" className={hoverFalcon}>{HoverDataTwo}</p>}
+                    <img
+                        id="cornerTwo"
+                        onClick={falconPage}
+                        onKeyPress = {falconPage}
+                        onFocus={(e) => onHoverFalcon(e)}
+                        onBlur={(e) => onHoverOverFalcon(e)}
+                        onMouseEnter={(e) => onHoverFalcon(e)}
+                        onMouseLeave={(e) => onHoverOverFalcon(e)}
+                        src={eBrand}
+                        alt="Falcon"
+                        tite="Falcon link"
+                        tabindex="3"
+                   />
             <form
                 class="flex"
                 action="https://blockchair.com/search"
@@ -297,9 +390,9 @@ function SourceInput() {
                     autoFocus
                     id="sourceInput"
                     class="extension__input"
-                    placeholder="Search a Ticker, Transaction or Address for multiple different blockchains"
+                    placeholder="Search a Ticker, Transaction or Address on 50+ chains"
                     data-toggle="tooltip"
-                    title="Search a Ticker, Transaction or Address for multiple different blockchains."
+                    title="Search a Ticker, Transaction or Address on 50+ chains."
                     tabindex="1"
                 ></input>
                 <button

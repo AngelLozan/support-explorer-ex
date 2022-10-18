@@ -1,15 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Community Inbox Alert</title>
-    <link rel="stylesheet" href="popup.css">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Falcon Refresher</title>
+    <link href="popup.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-  <h1 class="center">HelpScout Inbox Alert</h1>
+  <h1 class="center">Falcon Reloader</h1>
     <p id="dialog-box"></p>
+    <div id="animated" class="animated bounce" title="Exodude love you">
+        <img id="falcon" src="fella.png" style="max-width:90px; height:auto;" alt="Exodude icon">
+    </div>
+    <br>
+    <div class="center">
+        <button id="reload" title="Reload feeds" tabindex="1">Reload</button>
+    </div>
+    <div class="center" style="padding-top: 5px;">
+      <form>
+      <label for="timer" title="set the time for auto reload">Refresh Timer</label>
+      <select class="selector" id="timer" name="timer" tabindex="2">
+        <option value="15">15 Seconds</option>
+        <option value="30">30 Seconds</option>
+        <option value="45">45 Seconds</option>
+        <option value="60">60 Seconds</option>
+        <option value="off">Off</option>
+      </select>
+      </form>
+    </div>
+    <div id="snackbar"></div>
+    <script src='options.js'></script>
+</body>
+
+</html>
+
+
+<!-- 
     <section class="current_assignment">
         <form>
             <label for="waitTimeThreshold" title="How long can a ticket wait before you're alerted">Alert Urgency</label>
@@ -70,4 +98,4 @@
     <script src="options.js"></script>
 </body>
 
-</html>
+</html> -->

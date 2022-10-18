@@ -1,450 +1,161 @@
 /* global chrome */
 
-async function storeLinkStateOne() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ links: "block" }, () => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve("block");
-            }
-        });
-    })
-}
-
-async function storeLinkStateTwo() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ links: "none" }, () => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve("none");
-            }
-        });
-    })
-}
-
-async function storeSwitchState(e) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ switchForm: e.target.checked }, () => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(e.target.checked);
-            }
-        });
-    })
-}
-
-async function findLinkState(links) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get([links], function(result) {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result.links);
-            }
-        });
-    })
-}
-
-
-async function findSwitchState(switchForm) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get([switchForm], function(result) {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else {
-                resolve(result.switchForm);
-            }
-        });
-    })
-}
-
-async function findWaitTime(waitTimeThreshold) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get([waitTimeThreshold], function(result) {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } 
-            // else if (result.waitTimeThreshold === undefined) {
-            //     reject(new Error("Link state error"));
-            // } 
-            else {
-                resolve(result.waitTimeThreshold);
-
-            }
-        });
-    })
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
-
-    getTimeTitle();
-
-    let waitTimeThresholdEl = document.getElementById('waitTimeThreshold');
-
-    chrome.storage.local.get(['waitTimeThreshold'], result => waitTimeThresholdEl.value = result.waitTimeThreshold);
-    waitTimeThresholdEl.onchange = changeWaitTimeThreshold;
-
-    let y = document.getElementById("links");
-
-    let linkDisplay = await findLinkState('links');
-
-    if(linkDisplay === undefined){
-        y.style.display = "none"
-    } else {
-        y.style.display = linkDisplay;
-    }
-
-
-    let switchEl = document.getElementById('switchForm');
-
-    let switchDisplay = await findSwitchState('switchForm');
-
-    if(switchDisplay === undefined){
-        switchEl.checked = true;
-    } else {
-       switchEl.checked = switchDisplay;
-    }
-
-    //@dev this is just for reference. Another way to do it. >> chrome.storage.local.get(['switchForm'], result => switchEl.checked = result.switchForm);
-
-    const goToInbox = document.getElementById("inboxLink");
-    goToInbox.addEventListener("click", openInbox);
-
-    let goHighFive = document.getElementById("highFive");
-    goHighFive.addEventListener("click", openHighFive);
-
-    let goHandbook = document.getElementById("handbook");
-    goHandbook.addEventListener("click", openHandbook);
-
-    let goForm = document.getElementById("feedbackForm");
-    goForm.addEventListener("click", openForm);
-
-    let goForecast = document.getElementById("dailyForecast");
-    goForecast.addEventListener("click", openForecast);
+    const image = document.getElementById('falcon');
+    const button = document.getElementById('reload');
 
     document.getElementsByTagName('button')[0].focus();
 
-    switchEl.onclick = await changeSwitch;
+    //These functions are what grab the timer time set and feed it to local storage. Calls change timer when element changes and thereby sends message to background. 
+    let timer;
+
+    let timerEl = document.getElementById('timer');
+
+    chrome.storage.local.get(['timer'], result => timerEl.value = result.timer);
+    timerEl.onchange = changeTimer;
 
 
-})
+    //@dev The event that clicks the load button in the popup.html file and calls the execute fuction from above which runs the injected script reload.js. Importantly, only runs in Falcon tab.
+    document.getElementById('reload').addEventListener('click', execute);
 
-function getTimeTitle() {
-    var x = document.getElementById("snackbar");
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    if (time >= "12:00:00" && time <= "17:00:00") {
-        x.innerText = "Good Afternoon! 🚀";
-    } else if (time >= "17:00:01" && time <= "23:59:59") {
-        x.innerText = "Good Evening! 🌙";
-    } else {
-        x.innerText = "GM! 🌤️"
-    }
+    //@dev Moved chrome logic for this inside async function as API was too slow on occassion. 
+    await getPageInfo(image, button);
 
-    x.className = "show";
-    setTimeout(function() { x.className = x.className.replace("show", ""); }, 1000);
+});
 
-}
+//@dev Function to display page information properly and asynchronously.
 
+async function getPageInfo(img, button){
 
-async function changeSwitch(e) {
-    y = document.getElementById("links");
-
-    if (y.style.display === "none") {
-        y.style.display = "block";
-        await storeLinkStateOne();
-    } else {
-        y.style.display = "none";
-        await storeLinkStateTwo();
-    }
-
-    await storeSwitchState(e);
-
-}
-
-function changeWaitTimeThreshold(e) {
-    chrome.storage.local.set({ waitTimeThreshold: e.target.value }, () => console.log('New waitTimeThreshold: ' + e.target.value));
-    //chrome.runtime.sendMessage({ action: e.target.value });
-    var x = document.getElementById("snackbar");
-
-    if (e.target.value == "off") {
-        x.innerText = "Ok, I've turned the alert " + e.target.value
-    } else {
-        x.innerText = "Ok, I'll alert you for wait times over " + e.target.value + " minutes"
-    }
-
-    x.className = "show";
-    setTimeout(function() { x.className = x.className.replace("show", ""); }, 2500);
-
-}
-
-function tellMeUrgency(e) {
-    var x = document.getElementById("snackbar");
-
+    const query = { active: true, currentWindow: true };
+    let tabs = await chrome.tabs.query(query)
+    console.log(tabs);
     try {
-        x.innerText = "Right now the urgency is not set, select an option plz.";
-        x.className = "show";
-        setTimeout(function() { x.className = x.className.replace("show", ""); }, 2000);
 
-    } catch (error) {
-        console.log("Error in tell urgency method:", error);
+        //These set the popup.html elements to the found strings and images in the functions below.
+        img.src = chrome.runtime.getURL('fella.png');
+        button.innerText = await disable(tabs[0].title, tabs[0].url);
+    } catch (e) {
+        console.log("Reloader options.js error: ", e);
     }
+
 }
 
+//@dev Functionality behind drop down menu for timer. Stores value so persistent after closing extension (to remind you what interval you set).
+//@dev Sends message to background based on your selection. 
 
+function changeTimer(e) {
+    chrome.storage.local.set({ timer: e.target.value }, () => console.log('Timer set: ' + e.target.value));
+    chrome.runtime.sendMessage({ action: e.target.value });
+    var x = document.getElementById("snackbar");
+    if (e.target.value == "off") {
+        x.innerText = "Ok, I've turned the timer " + e.target.value
+    } else {
+        x.innerText = "Ok, I've set a timer for " + e.target.value + " seconds"
+    }
+    // Add the "show" class to DIV
+    x.className = "show";
+    // After 1.5 seconds, remove the show class from DIV
+    setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
+}
 
-// To do: Link dictionary and combine url match functions into one or make class. 
+//@dev Get's tabID so that you can use it in execute() function to specify where to run reload.js on click of the "load element" (see above DOMContentLoaded)
+//@dev Fires only after opening popup and calling reload from popup
 
-// let dialyForecast = "https://coda.io/d/Support-Handbook_d7lplUJJ931/Daily-Forecast_su-BB#";
-// let inboxLink = "https://secure.helpscout.net/mailbox/69f176a183caf9f4/";
-// let highFive = "https://coda.io/form/SMSA-High-Five-Submission_dJKe5OcBBBi";
-// let handbook = "https://coda.io/d/_dZd1uul9q6g/Social-Media_su8j2";
-// let feedbackForm = "https://docs.google.com/forms/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/viewform";
+async function getTabId() {
+    try {
+        let queryOptions = { active: true, currentWindow: true };
+        // `tab` will either be a `tabs.Tab` instance or `undefined`.
+        let [tab] = await chrome.tabs.query(queryOptions);
+        if (/app.falcon.io/.test(tab.url)) {
+            let tabD = tab.id;
+            return tabD;
+        } else {
+            return;
+        }
+    } catch (e) {
+        alert("Lost context, refresh the extension on brave://extensions to restore.");
+        console.log(e);
+    }
+};
 
-//let buttonArray = [dialyForecast, inboxLink, highFive, handbook, feedbackForm];
+async function execute() {
+    const tabId = await getTabId();
 
-function openInbox() {
     var found = false;
-    var tabId;
-    let focusedTab;
-    let currentTab;
+    var tabbId;
 
+try {
+    if (tabId == null) {
 
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        currentTab = tabs[0];
-        if (currentTab.url.search("https://secure.helpscout.net/mailbox/69f176a183caf9f4") > -1) {
-            focusedTab = currentTab;
-        }
-    });
-
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(function(window) {
-            window.tabs.forEach(function(tab) {
-                if (tab.url.search("https://secure.helpscout.net/mailbox/69f176a183caf9f4") > -1) {
-                    found = true;
-                    tabId = tab.id;
-                }
+        chrome.windows.getAll({ populate: true }, function(windows) {
+            windows.forEach(function(window) {
+                window.tabs.forEach(function(tab) {
+                    if (tab.url.search("https://app.falcon.io/") > -1) {
+                        found = true;
+                        tabbId = tab.id;
+                    }
+                })
             })
-        })
-        if (found == false) {
-            chrome.tabs.create({ active: true, url: "https://secure.helpscout.net/mailbox/69f176a183caf9f4/" });
-        } else if (focusedTab == currentTab) {
-            var x = document.getElementById("snackbar");
+            if (found == false) {
+                chrome.tabs.create({ active: true, url: "https://app.falcon.io/#/engage/overview" });
+            } else {
+                chrome.tabs.update(tabbId, { selected: true });
+                var x = document.getElementById("snackbar");
 
-            x.innerText = "You're currently there."
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        } else {
-            chrome.tabs.update(tabId, { selected: true });
-            var x = document.getElementById("snackbar");
+                x.innerText = `Falcon is now open in your other window ${getRandomEmoji()}`
 
-            x.innerText = `Community inbox is now open in your other window ${getRandomEmoji()}`
-
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        }
-    });
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 1.5 seconds, remove the show class from DIV
+                setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
+            }
+        });
+    } else {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            files: ['reload.js'],
+        });
+        var x = document.getElementById("snackbar");
+        x.innerText = "Boop!";
+        // Add the "show" class to DIV
+        x.className = "show";
+        // After 1.5 seconds, remove the show class from DIV
+        setTimeout(function() { x.className = x.className.replace("show", ""); }, 800);
+    };
+} catch(e) {
+    console.log(e);
 }
+    
+};
 
-function openForm() {
-    let found = false;
-    let tabId;
-    let focusedTab;
-    let currentTab;
+// These functions query the tab title and determine the text of the popup button, the exodude image and what-tab-you're-on string, respectively. 
 
+const disable = async (tabTitle, tabUrl) => {
+    let text;
 
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        currentTab = tabs[0];
-        if (currentTab.url.search("https://docs.google.com/forms/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/") > -1 || currentTab.url.search("https://docs.google.com/forms/u/0/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/") > -1) {
-            focusedTab = currentTab;
-        }
-    });
+    if (tabTitle.includes('Social Media Management') === true || tabUrl.includes('falcon.io') === true) {
+        text = 'Reload';
+    } else {
+        text = 'Go to Falcon';
+    }
 
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(function(window) {
-            window.tabs.forEach(function(tab) {
-                if (tab.url.search("https://docs.google.com/forms/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/") > -1 || tab.url.search("https://docs.google.com/forms/u/0/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/") > -1) {
-                    found = true;
-                    tabId = tab.id;
-                }
-            })
-        })
-        if (found == false) {
-            chrome.tabs.create({ active: true, url: "https://docs.google.com/forms/d/e/1FAIpQLSeshx0WxsZkSWjIIUPlba1zLX_dL_vLCXA0aPkvtQQezjE-PQ/viewform" });
-        } else if (focusedTab == currentTab) {
-            var x = document.getElementById("snackbar");
-
-            x.innerText = "You're currently there."
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        } else {
-            chrome.tabs.update(tabId, { selected: true });
-            var x = document.getElementById("snackbar");
-
-            x.innerText = `Feedback form is now open in your other window ${getRandomEmoji()}`
-
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        }
-    });
-}
-
-function openHighFive() {
-    var found = false;
-    var tabId;
-    let focusedTab;
-    let currentTab;
-
-
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        currentTab = tabs[0];
-        if (currentTab.url.search("https://coda.io/form/SMSA-High-Five-Submission_dJKe5OcBBBi") > -1) {
-            focusedTab = currentTab;
-        }
-    });
-
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(function(window) {
-            window.tabs.forEach(function(tab) {
-                if (tab.url.search("https://coda.io/form/SMSA-High-Five-Submission_dJKe5OcBBBi") > -1) {
-                    found = true;
-                    tabId = tab.id;
-                }
-            })
-        })
-        if (found == false) {
-            chrome.tabs.create({ active: true, url: "https://coda.io/form/SMSA-High-Five-Submission_dJKe5OcBBBi" });
-        } else if (focusedTab == currentTab) {
-            var x = document.getElementById("snackbar");
-
-            x.innerText = "You're currently there."
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        } else {
-            chrome.tabs.update(tabId, { selected: true });
-            var x = document.getElementById("snackbar");
-
-            x.innerText = `High five form is now open in your other window ${getRandomEmoji()}`
-
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        }
-    });
-}
-
-function openForecast() {
-    var found = false;
-    var tabId;
-    let focusedTab;
-    let currentTab;
-
-
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        currentTab = tabs[0];
-        if (currentTab.url.search("https://coda.io/d/Support-Handbook_d7lplUJJ931/") > -1) {
-            focusedTab = currentTab;
-        }
-    });
-
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(function(window) {
-            window.tabs.forEach(function(tab) {
-                if (tab.url.search("https://coda.io/d/Support-Handbook_d7lplUJJ931/") > -1) {
-                    found = true;
-                    tabId = tab.id;
-                }
-            })
-        })
-        if (found == false) {
-            chrome.tabs.create({ active: true, url: "https://coda.io/d/Support-Handbook_d7lplUJJ931/Daily-Forecast_su-BB" });
-        } else if (focusedTab == currentTab) {
-            var x = document.getElementById("snackbar");
-
-            x.innerText = "You're on the right tab."
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        } else {
-            chrome.tabs.update(tabId, { selected: true });
-            var x = document.getElementById("snackbar");
-
-            x.innerText = `Daily forecast is now open in your other window ${getRandomEmoji()}`
-
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        }
-    });
+    return text;
 }
 
 
-function openHandbook() {
-    var found = false;
-    var tabId;
-    let focusedTab;
-    let currentTab;
 
-
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        currentTab = tabs[0];
-        if (currentTab.url.search("https://coda.io/d/SMSA-Hub_dZd1uul9q6g/") > -1) {
-            focusedTab = currentTab;
-        }
-    });
-
-    chrome.windows.getAll({ populate: true }, function(windows) {
-        windows.forEach(function(window) {
-            window.tabs.forEach(function(tab) {
-                if (tab.url.search("https://coda.io/d/SMSA-Hub_dZd1uul9q6g/") > -1) {
-                    found = true;
-                    tabId = tab.id;
-                }
-            })
-        })
-        if (found == false) {
-            chrome.tabs.create({ active: true, url: "https://coda.io/d/_dZd1uul9q6g/Social-Media_su8j2" });
-        } else if (focusedTab == currentTab) {
-            var x = document.getElementById("snackbar");
-
-            x.innerText = "You're on the right tab."
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        } else {
-            chrome.tabs.update(tabId, { selected: true });
-            var x = document.getElementById("snackbar");
-
-            x.innerText = `The handbook is now open in your other window ${getRandomEmoji()}`
-
-            // Add the "show" class to DIV
-            x.className = "show";
-            // After 1.5 seconds, remove the show class from DIV
-            setTimeout(function() { x.className = x.className.replace("show", ""); }, 1500);
-        }
-    });
-
-}
+//These emoji arrays help the functions generate a random emoji and display it depending on if you're on falcon or not. 
 
 const emojis = ['✌️', '💯', '🦾', '🚀', '🤙', '🖖', '👋', '👾', '🌤', '🌈', '✨', '💫', '💎', '🫶', '🫵'];
+
+const wrongEmojis = ['⛔️', '🛑', '🚫', '🚩', '❌'];
+
+
+const getRandomNoEmoji = () => {
+    return wrongEmojis[~~(Math.random() * wrongEmojis.length)]
+};
+
 const getRandomEmoji = () => {
     return emojis[~~(Math.random() * emojis.length)]
 };
