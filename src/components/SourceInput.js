@@ -240,7 +240,7 @@ const falconPage = async (event) => {
         } else if (/^[A-Z2-7]{58}$/g.test(source)) {
             //@dev Placeholder for Algo address 
             await existingTabCheck("https://algoexplorer.io/address/", source);
-        } else if (await getAlgoData(source)) {
+        } else if (await getAlgoData(source) && source.length > 50) {
             //@dev Placeholder for Algo TX. Regex -> /^[A-Z2-7]{52}$/g.test(source)
             await existingTabCheck("https://algoexplorer.io/tx/", source);
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
