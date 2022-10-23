@@ -107,7 +107,7 @@ function SourceInput() {
     const moneroText = async (source) => {
         var snackbar = await document.getElementById("snackbar");
         snackbar.innerText =
-            "This looks like a Monero address, which you cannot view on an explorer ususally 🔍 Click this dialogue to open a new tab anyways.";
+            "This looks like a Monero address, which you cannot view on an explorer usually 🔍 Click this dialogue to open a new tab anyways.";
         snackbar.className = "showMulti";
         snackbar.style.right = "15px";
 
@@ -292,6 +292,7 @@ const falconPage = async (event) => {
                 hbarID
             );
         } else if (/4[0-9AB][1-9A-HJ-NP-Za-km-z]{93}$/g.test(source)) {
+            //@dev Monero Address identify and warn it's not viewable on blockchain.
             await moneroText(source);
         } else if (
             /^[1-9A-HJ-NP-Za-km-z]{59}$|^(addr1)[a-z0-9]+/g.test(source)
