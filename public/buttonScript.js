@@ -26,7 +26,7 @@ const buttonScript = async () => {
 
         console.log("button injected! YAY");
     } catch (e) {
-        alert("Oh no, the reload button didn't load! Try refreshing the page and check your connection. 🥲")
+        alert("Oh no, the reload button didn't load! 🥲 Try refreshing the page and check your connection.")
         console.log("No button or timeout too short! ", e);
     }
 };

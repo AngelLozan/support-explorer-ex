@@ -81,6 +81,7 @@ function SourceInput() {
                     "https://atomscan.com/transactions/" + source,
                     "https://xrpscan.com/tx/" + source,
                     "https://cardanoscan.io/transaction/" + source,
+                    "https://finder.terra.money/classic/tx/" + source,
                 ];
                 chrome.windows.create({
                     focused: false,
@@ -216,7 +217,10 @@ const falconPage = async (event) => {
     }
 
     const search = async () => {
-        let source = await document.getElementById("sourceInput").value;
+        let inputValue = await document.getElementById("sourceInput").value;
+
+        let source = await inputValue.trim();
+        
         console.log(source.length);
 
         loading();
@@ -240,7 +244,7 @@ const falconPage = async (event) => {
         } else if (/^[A-Z2-7]{58}$/g.test(source)) {
             //@dev Placeholder for Algo address 
             await existingTabCheck("https://algoexplorer.io/address/", source);
-        } else if (await getAlgoData(source) && source.length > 50) {
+        } else if (await getAlgoData(source) && source.length === 52) {
             //@dev Placeholder for Algo TX. Regex -> /^[A-Z2-7]{52}$/g.test(source)
             await existingTabCheck("https://algoexplorer.io/tx/", source);
         } else if (/^0x[a-fA-F0-9]{40}$/g.test(source)) {
@@ -299,6 +303,9 @@ const falconPage = async (event) => {
         ) {
             //@dev Ada addresses
             await existingTabCheck("https://cardanoscan.io/address/", source);
+        } else if (/^(terra1)[a-z0-9A-Z]{38}$/g.test(source)) {
+            //@dev LUNC address.
+            await existingTabCheck("https://finder.terra.money/classic/address/", source);
         } else if (
             /^grs[a-zA-Z0-9]{5,88}$|^F[a-km-zA-HJ-NP-Z1-9]{26,33}$|^G[A-Z0-9]{55}$|^ltc[a-zA-Z0-9]{5,88}$|^[LM][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[7X][a-km-zA-HJ-NP-Z1-9]{26,33}$|^[9AD][a-km-zA-HJ-NP-Z1-9]{26,33}$|^([qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120}|(bitcoincash)?[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{40,120})$|^bc(0([ac-hj-np-z02-9]{39}|[ac-hj-np-z02-9]{59})|1[ac-hj-np-z02-9]{8,87})$|^1[a-km-zA-HJ-NP-Z1-9]{25,34}(?!\/)$|^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/g.test(
                 source
@@ -307,7 +314,7 @@ const falconPage = async (event) => {
             //@dev Most chains addresses. Needs to stay last so other regex's work. Includes LTC, XLM, DASH, DOGE, XMR, BCH and BTC derivations.
             await existingTabCheck("https://blockchair.com/search?q=", source);
         } else if (/^\s*[0-9a-fA-F]{64}\s*$/g.test(source)) {
-            //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA)
+            //@dev Transaction Window for Multiple chains (So far: Tron, ATOM, UTXOs, BNB beacon chain, XRP, ADA, LUNC)
             let noSpaceSourceM = await source.replace(/\s/g,'');
             lookUpText(noSpaceSourceM);
             
