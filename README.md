@@ -27,10 +27,112 @@ See this section of Coda for reference: https://coda.io/d/Customer-Support-Hacka
 - Jamie M.
 - Scott L. 
 
-Notes: 
+## Chains and Assets Searchable:
 
-- Querying blockchain apis directly over regexs may be more reliable in the end. Regexs are easier and for the most part effective. Example: tezos. I can have components for querying tzstats, but regexs identify tx and address strings reliably and effectively. Need to study this use case further. 
-- Packages express and proxy middleware are for development envs. Not needed for prod. 
+Assets searchable: All supported on Coinranking. 
+
+EVM Address (DeBank) - 37 Chains
+
+	Ethereum
+	BNB Smart Chain
+	Polygon
+	Gnosis
+	Fantom
+	OKC
+	HECO
+	Avalanche
+	Arbitrum
+	Optimism
+	Celo
+	Moonriver
+	Cronos
+	Boba
+	Metis
+	BTTC
+	Aurora
+	Moonbeam
+	smartBCH
+	Harmony
+	Fuse
+	Astar
+	Palm
+	Shiden
+	Klaytn
+	RSK
+	IoTeX
+	KCC
+	Wanchain
+	Songbird
+	Evmos
+	DFK
+	Telos
+	Swimmer
+	Arbitrum Nova
+	Canto
+	Dogechain
+	
+	
+	
+EVM Transactions (Blockscan) - 12 chains
+	
+	Ethereum
+	Beacon Chain
+	BNB Smart Chain
+	Fantom
+	Optimism
+	Polygon
+	Arbitrum
+	Moonbeam
+	Moonriver
+	Avalanche
+	Cronos
+	BTTC
+	
+Layer 1 Address & Transactions (Blockchair) - 17 chains
+	
+	Bitcoin
+	Litecoin
+	Cardano
+	XRP
+	Polkadot
+	Dogecoin
+	Bitcoin Cash
+	Stellar
+	Monero
+	EOS
+	Kusama
+	Bitcoin SV
+	eCash
+	Zcash
+	Dash
+	Mixin
+	Groestlcoin
+	
+	
+	Other L1’s identified through regex or direct interface with blockchain:
+	
+	Addresses - Algo, Tezos, Solana, Tron, Hedera, Atom, BNB Beacon 
+	
+	Transactions - Algo, Tezos, Solana, Tron, Hedera, Atom, BNB Beacon, 
+	
+	
+	
+Running total:
+	
+Addresses - 
+		37 @ Debank (EVMs)
+		17 @ Blockchair
+		7 Individual
+		—---
+		61
+	
+Transactions - 
+		12 @ Blockscan (EVMs)
+		17 @ Blockchair
+		7 Individual
+		—---
+		36
+
 
 
 
