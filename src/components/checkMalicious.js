@@ -2,31 +2,37 @@
 
 const checkMalicious = async (source) => {
 
-    // let ticker;
-    // let occurrences;
-    // let attackType;
+   async function findMessage(keys) {
+     let occurrences = await malicious[keys][0];
+     let attackType = await malicious[keys][1];
+     let ticker = await malicious[keys][2];
+
+     let message = "🛑 This " + ticker + " hash has been flagged with " + occurrences + " occurrence(s) of " + attackType + " attacks.  Click this dialog to open a new minimized window. Click me to reset.";
+
+     return message;
+ }
 
     const malicious = {
-        "0x7bd1ed3adf588a89c392c5c424583c0ffffce145": ["19", "malware", "ETH"],
-        "0x4DE23f3f0Fb3318287378AdbdE030cf61714b2f3": ["36", "scam", "ETH"],
-        "bc1qr6ra3pr56r5ha37pvz5g5xrk4q66hu86jsptyv": ["2", "undefined", "BTC"],
-        "bc1q596wathu333nh3rtvypyp7sxzuqqqtua4drk5z": ["37", "malware", "BTC"],
-        "bc1qy98y22mnqr6pehukzweyz8yqehnf6h4qn97244": ["9", "malware", "BTC"],
-        "TXaYFNopc8xsjJLtVzvAVQGProbCmsuXYr": ["53", "scam", "TRX"],
-        "TVotcWLyia5uAFn5LmhVPcmHoxhbdJCmBd": ["14", "scam", "TRX"],
-        "TFkXxSdc7wVvEt6pgs99j655mubwcdcv6s": ["15", "scam", "TRX"],
-        "TAR7PijCQUXjCBbpJ8LdadxA1syhVGk1it": ["3", "scam", "TRX"],
-        "TN6SSaE6DJGjk2XTCFLwADyDg4hWjJ8vSz": ["20", "scam", "TRX"],
-        "0x09eb9ed064594de81c5b95a10ca565147a9e3f32": ["2", "malware", "ETH"],
-        "0x91e36fc3f9b7873d618efeae755958bc6ede898e": ["8", "undefined", "ETH"],
-        "bc1qhcvsr4lzt0394swq7gu84kmv83gddyxvces7h2": ["12", "undefined", "BTC"],
-        "rnT25PNPRoGGutThwQtR13DZ9iCn4egnn3": ["4", "undefined", "XRP"],
-        "0x118A52F44a9a7c8D526436CBbC38bD49C7Db0426": ["3", "malware", "ETH"],
-        "34U9ZtH4JpddoZKnmt4ZLaK9aWo5AXWEfU": ["4", "scam", "BTC"],
-        "bc1qk7xml2px86eg339nh3m94qj84c2mgf48rnw8lz": ["4", "undefined", "BTC"],
-        "0xAaB910ACDD01AF491179Bb7c91A56080F764c8E1": ["2", "phishing", "ETH"],
-        "0x002c16040b2f42fcb23dfecd5566ffbdd9865f6f": ["4", "undefined", "ETH"],
-        "0xe64ad42e9ed6135b504f4c29ffe9d3a187bc14e2": ["7", "undefined", "ETH"],
+        '0x7bd1ed3adf588a89c392c5c424583c0ffffce145': ["19", "malware", "ETH"],
+        '0x4DE23f3f0Fb3318287378AdbdE030cf61714b2f3': ["36", "scam", "ETH"],
+        'bc1qr6ra3pr56r5ha37pvz5g5xrk4q66hu86jsptyv': ["2", "undefined", "BTC"],
+        'bc1q596wathu333nh3rtvypyp7sxzuqqqtua4drk5z': ["37", "malware", "BTC"],
+        'bc1qy98y22mnqr6pehukzweyz8yqehnf6h4qn97244': ["9", "malware", "BTC"],
+        'TXaYFNopc8xsjJLtVzvAVQGProbCmsuXYr': ["53", "scam", "TRX"],
+        'TVotcWLyia5uAFn5LmhVPcmHoxhbdJCmBd': ["14", "scam", "TRX"],
+        'TFkXxSdc7wVvEt6pgs99j655mubwcdcv6s': ["15", "scam", "TRX"],
+        'TAR7PijCQUXjCBbpJ8LdadxA1syhVGk1it': ["3", "scam", "TRX"],
+        'TN6SSaE6DJGjk2XTCFLwADyDg4hWjJ8vSz': ["20", "scam", "TRX"],
+        '0x09eb9ed064594de81c5b95a10ca565147a9e3f32': ["2", "malware", "ETH"],
+        '0x91e36fc3f9b7873d618efeae755958bc6ede898e': ["8", "undefined", "ETH"],
+        'bc1qhcvsr4lzt0394swq7gu84kmv83gddyxvces7h2': ["12", "undefined", "BTC"],
+        'rnT25PNPRoGGutThwQtR13DZ9iCn4egnn3': ["4", "undefined", "XRP"],
+        '0x118A52F44a9a7c8D526436CBbC38bD49C7Db0426': ["3", "malware", "ETH"],
+        '34U9ZtH4JpddoZKnmt4ZLaK9aWo5AXWEfU': ["4", "scam", "BTC"],
+        'bc1qk7xml2px86eg339nh3m94qj84c2mgf48rnw8lz': ["4", "undefined", "BTC"],
+        '0xAaB910ACDD01AF491179Bb7c91A56080F764c8E1': ["2", "phishing", "ETH"],
+        '0x002c16040b2f42fcb23dfecd5566ffbdd9865f6f': ["4", "undefined", "ETH"],
+        '0xe64ad42e9ed6135b504f4c29ffe9d3a187bc14e2': ["7", "undefined", "ETH"],
         'TGQHGNuPA5XUX3DoaQHe2JegbZvKDjcrCb': ["1", "malware", "USDTtrx"],
         'bnb1pma22amrcdztf93t4ynp4jzq6llpqlthualgr3': ["1", "undefined", "BNB"],
         'RMKRCe88sJZxNKPRRBePP6AV2i6Pk2VXfF': ["1", "undefined", "RVN"],
@@ -62,23 +68,10 @@ const checkMalicious = async (source) => {
         'ltc1qxk7dvnv384lvw23wfsm9cptlwjsp2h6zpjls6c': ["2", "malware", "LTC"],
         'LdQDaHyKiVwUSXU1ZNynwMCkkYAy4weSDD': ["2", "malware", "LTC"],
         'addr1qxddgrnyrk74d6tw8dvzph79mtk6z3uvvf2h7dhskqf889tyjerk76a8u422508yut5nqqg6mmgczcygq8yhdvtxshesc86rd2': ["3", "malware", "ADA"],
-        "bc1qlp2dqp59093lpasjlua08nsnrj2a5u5ud2clws": ["1", "undefined", "BTC"],
-        "TSVSgu1PLt2o6ihFvjrhvoDrU6AYmJ2XdJ": ["1", "undefined", "TRX"],
-        "0x4DE23f3f0Fb3318287378AdbdE030cf61714b2f3": ["1", "undefined", "ETH"],
-        "637c3eec12d605f60f09c7c5b4ed81819b8e108fccb36a17f60857f7bd940944": ["1", "undefined", "BTC"],
-        "cc9933b430740d8024664bb142deeb849f03e05fd44b81b17361301f97ea498d": ["1", "undefined", "BTC"],
-        "0x7bd1ed3adf588a89c392c5c424583c0ffffce145": ["1", "undefined", "ETH"],
-        "0x4DE23f3f0Fb3318287378AdbdE030cf61714b2f3": ["1", "undefined", "ETH"],
-        "bc1q596wathu333nh3rtvypyp7sxzuqqqtua4drk5z": ["1", "undefined", "BTC"],
-        "bc1qy98y22mnqr6pehukzweyz8yqehnf6h4qn97244": ["1", "undefined", "BTC"],
-        "TXaYFNopc8xsjJLtVzvAVQGProbCmsuXYr": ["1", "undefined", "TRX"],
-        "TVotcWLyia5uAFn5LmhVPcmHoxhbdJCmBd": ["1", "undefined", "TRX"],
-        "TFkXxSdc7wVvEt6pgs99j655mubwcdcv6s": ["1", "undefined", "TRX"],
-        "TAR7PijCQUXjCBbpJ8LdadxA1syhVGk1it": ["1", "undefined", "TRX"],
-        "TN6SSaE6DJGjk2XTCFLwADyDg4hWjJ8vSz": ["1", "undefined", "TRX"],
-        "0x91e36fc3f9b7873d618efeae755958bc6ede898e": ["1", "undefined", "ETH"],
-        "bc1qhcvsr4lzt0394swq7gu84kmv83gddyxvces7h2": ["1", "undefined", "BTC"],
-        "0xe65edaeb8fdb554c99987bcf46d984e7b36c8240": ["1", "undefined", "ETH"]
+        'bc1qlp2dqp59093lpasjlua08nsnrj2a5u5ud2clws': ["1", "undefined", "BTC"],
+        'TSVSgu1PLt2o6ihFvjrhvoDrU6AYmJ2XdJ': ["1", "undefined", "TRX"],
+        '637c3eec12d605f60f09c7c5b4ed81819b8e108fccb36a17f60857f7bd940944': ["1", "undefined", "BTC"],
+        'cc9933b430740d8024664bb142deeb849f03e05fd44b81b17361301f97ea498d': ["1", "undefined", "BTC"]  
     }
 
     for (let keys in malicious) {
@@ -86,13 +79,16 @@ const checkMalicious = async (source) => {
         let regex = new RegExp(keys, 'gi');
 
         if (regex.test(source)) {
-            let occurrences = await malicious[keys][0];
-            let attackType = await malicious[keys][1];
-            let ticker = await malicious[keys][2];
 
-            let message = "🛑 This " + ticker + " hash has been flagged with " + occurrences + " occurrence(s) of " + attackType + " attacks.  Click this dialog to open a new minimized window. Click me to reset.";
+
+            // let occurrences = malicious[keys][0];
+            // let attackType = malicious[keys][1];
+            // let ticker = malicious[keys][2];
+
+            // let message = "🛑 This " + ticker + " hash has been flagged with " + occurrences + " occurrence(s) of " + attackType + " attacks.  Click this dialog to open a new minimized window. Click me to reset.";
+            
             var snackbar = await document.getElementById("snackbar");
-            snackbar.innerText = message;
+            snackbar.innerText = await findMessage(source);
             snackbar.className = "showMultiScam";
             snackbar.style.right = "15px";
 
