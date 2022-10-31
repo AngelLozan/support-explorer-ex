@@ -17,6 +17,14 @@ Build with `npm run build`
 
 (After build) Open chrome://extensions or brave://extension and upload the unpacked extension. 
 
+
+## Updating malicious address array: 
+
+- Utilize this spreadsheet to pull new addresses: https://docs.google.com/spreadsheets/d/1aAAPyrZgfJcWelhLr3RgGU5qS5Epwa2HhBbGNXrfh74/edit#gid=0
+  
+- Update the `checkMalicious.js` component under `src` > `components` and update the dictionary found there. 
+- Update the `SourceInpug.js` array `maliciousArray` with the same address, without details. 
+
 ## Use Case
 
 See this section of Coda for reference: https://coda.io/d/Customer-Support-Hackathon_deARNEw7ms9/Browser-Extension-Support-Tool_suYtf#_luH-i.

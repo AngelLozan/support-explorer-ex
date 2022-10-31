@@ -295,6 +295,7 @@ const falconPage = async (event) => {
                 snackbar.className = snackbar.className.replace("show", "");
             }, 800);
         } else if (maliciousArray.indexOf(source) > -1) {
+            //@dev Checks for malicious addresses and displays warning message with info on each. 
             await checkMalicious(source);
         } else if (/^\s*[0-9a-z\sA-Z]{3,9}\s*$/gi.test(source)) {
             //@dev Match asset ticker or crypto name search to populate iframe. 

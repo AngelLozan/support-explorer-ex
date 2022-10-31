@@ -80,12 +80,6 @@ const checkMalicious = async (source) => {
 
         if (regex.test(source)) {
 
-
-            // let occurrences = malicious[keys][0];
-            // let attackType = malicious[keys][1];
-            // let ticker = malicious[keys][2];
-
-            // let message = "🛑 This " + ticker + " hash has been flagged with " + occurrences + " occurrence(s) of " + attackType + " attacks.  Click this dialog to open a new minimized window. Click me to reset.";
             
             var snackbar = await document.getElementById("snackbar");
             snackbar.innerText = await findMessage(source);
