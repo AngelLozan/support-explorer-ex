@@ -23,7 +23,7 @@ Build with `npm run build`
 - Utilize this spreadsheet to pull new addresses: https://docs.google.com/spreadsheets/d/1aAAPyrZgfJcWelhLr3RgGU5qS5Epwa2HhBbGNXrfh74/edit#gid=0
   
 - Update the `checkMalicious.js` component under `src` > `components` and update the dictionary found there. 
-- Update the `SourceInpug.js` array `maliciousArray` with the same address, without details. 
+- Update the `SourceInput.js` array `maliciousArray` with the same address, without details. 
 
 ## Use Case
 
