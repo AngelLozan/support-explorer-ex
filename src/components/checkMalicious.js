@@ -108,11 +108,11 @@ const checkMalicious = async (source) => {
                         "showMultiScam",
                         "show"
                     );
-                    snackbar.style.right = "45%";
+                    snackbar.style.right = "40%";
                     setTimeout(function() {
                         snackbar.className = snackbar.className.replace("show", "");
                         snackbar.style.right = snackbar.style.right.replace(
-                            "45%",
+                            "40%",
                             "60%"
                         );
                     }, 1500);
