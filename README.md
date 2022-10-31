@@ -119,7 +119,7 @@ Layer 1 Address & Transactions (Blockchair) - 17 chains
 	
 	Other L1’s identified through regex or direct interface with blockchain:
 	
-	Addresses - Algo, Tezos, Solana, Tron, Hedera, Atom, BNB Beacon 
+	Addresses - Algo, Tezos, Solana, Tron, Hedera, Atom, BNB Beacon, RVN 
 	
 	Transactions - Algo, Tezos, Solana, Tron, Hedera, Atom, BNB Beacon, 
 	
