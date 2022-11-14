@@ -87,7 +87,7 @@ chrome.alarms.onAlarm.addListener(() => {
 });
 
 
-//Updates all the feeds when the tab is reloaded and when entering and exiting feed items. Specific to urls that contain "falcon.io". 
+//@dev Updates all the feeds when the tab is reloaded and when entering and exiting feed items. Specific to urls that contain "falcon.io". 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && /app.falcon.io/.test(tab.url)) {
         chrome.scripting.executeScript({

@@ -297,7 +297,7 @@ const falconPage = async (event) => {
         } else if (maliciousArray.indexOf(source) > -1) {
             //@dev Checks for malicious addresses and displays warning message with info on each. 
             await checkMalicious(source);
-        } else if (/^\s*[0-9a-z\sA-Z]{3,9}\s*$/gi.test(source)) {
+        } else if (/^\s*[0-9a-z\sA-Z]{2,9}\s*$/gi.test(source)) {
             //@dev Match asset ticker or crypto name search to populate iframe. 
             let noSpaceSource = await source.replace(/\s/g,'');
             let address = 'https://coinranking.com/?search=' + noSpaceSource;
