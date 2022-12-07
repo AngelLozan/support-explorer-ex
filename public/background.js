@@ -77,7 +77,7 @@ chrome.alarms.onAlarm.addListener(() => {
         let tabId = tabs[0].id;
         // Need this function to call reload
         chrome.scripting.executeScript({
-            target: { tabId: tabId, allFrames: true },
+            target: { tabId: tabId},
             files: ['reload.js'],
         })
         console.log("Alarm fired, good job.");
@@ -91,7 +91,7 @@ chrome.alarms.onAlarm.addListener(() => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && /app.falcon.io/.test(tab.url)) {
         chrome.scripting.executeScript({
-                target: { tabId: tabId, allFrames: true },
+                target: { tabId: tabId},
                 files: ['reload.js'],
             })
             .then(() => {
@@ -106,16 +106,19 @@ chrome.runtime.onMessage.addListener((request) => {
     if (request.action == "updateBadge") {
         if(request.message == undefined){
             chrome.action.setBadgeText({ text: '' });
+            console.log("something undefined");
         } else if (request.message <= 0){
            chrome.action.setBadgeText({ text: '' });
         } else if(request.message > 2) {
             chrome.action.setBadgeBackgroundColor({color: "#f25252"});
             chrome.action.setBadgeText({ text: String(request.message) }) ;
         } else {
-            chrome.action.setBadgeBackgroundColor({color: "#ACCEF7"});
+            //chrome.action.setBadgeBackgroundColor({color: "#ACCEF7"});
             chrome.action.setBadgeText({ text: String(request.message) }) ;
+            console.log("something correct");
         }
         console.log('Badge set');
+        
     }
 });
 
