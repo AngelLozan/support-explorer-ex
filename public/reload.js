@@ -18,8 +18,8 @@ async function refresher() {
     console.log('title array is: ', titleArray);
 
     try {
-        await findNumber(titleArray);
-        //setTimeout(() => findNumber(titleArray), 2000);
+        //await findNumber(titleArray);
+        setTimeout(() => findNumber(titleArray), 2000);
         
     } catch (error) {
         console.log("Error in refresher function: ", error);

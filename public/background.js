@@ -87,19 +87,19 @@ chrome.alarms.onAlarm.addListener(() => {
 });
 
 
-//@dev Updates all the feeds when the tab is reloaded and when entering and exiting feed items. Specific to urls that contain "falcon.io". 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && /app.falcon.io/.test(tab.url)) {
-        chrome.scripting.executeScript({
-                target: { tabId: tabId},
-                files: ['reload.js'],
-            })
-            .then(() => {
-                console.log("Feeds reloaded. Enter/Exit comment.");
-            })
-            .catch(err => console.log(err));
-    }
-});
+// //@dev Updates all the feeds when the tab is reloaded and when entering and exiting feed items. Specific to urls that contain "falcon.io". 
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     if (changeInfo.status === 'complete' && /app.falcon.io/.test(tab.url)) {
+//         chrome.scripting.executeScript({
+//                 target: { tabId: tabId},
+//                 files: ['reload.js'],
+//             })
+//             .then(() => {
+//                 console.log("Feeds reloaded. Enter/Exit comment.");
+//             })
+//             .catch(err => console.log(err));
+//     }
+// });
 
 // Scrapes Unread feed item for number of unread items every time reload script is injected. Sets badge text based number of unread items (new tweets/comments/ect.)
 chrome.runtime.onMessage.addListener((request) => {
@@ -113,7 +113,7 @@ chrome.runtime.onMessage.addListener((request) => {
             chrome.action.setBadgeBackgroundColor({color: "#f25252"});
             chrome.action.setBadgeText({ text: String(request.message) }) ;
         } else {
-            //chrome.action.setBadgeBackgroundColor({color: "#ACCEF7"});
+            chrome.action.setBadgeBackgroundColor({color: "#ACCEF7"});
             chrome.action.setBadgeText({ text: String(request.message) }) ;
             console.log("something correct");
         }
