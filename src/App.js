@@ -1,5 +1,5 @@
 import '../src/styles/App.css';
-import SourceInput from './components/SourceInput';
+import SourceInput from './components/SourceInput.js';
 
 
 function App() {

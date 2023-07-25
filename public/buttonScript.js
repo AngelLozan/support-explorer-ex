@@ -9,14 +9,14 @@ const buttonScript = async () => {
     try {
         // let topBar = await document.querySelector("#mainUIView > div > ui-view > div.engage-nav-bar.eyas-background-white.eyas-border--bottom.eyas-layout.eyas-layout--middle.eyas-pr20.eyas-pl20.eyas-z-lowest > div.engage-navigation-view");
 
-        let navBar = await document.querySelector("#falcon-sidebar-menu > nav > div > brandwatch-logo");
+        let navBar = await document.querySelector("#mainUIView > div > ui-view > div > engage-sidebar > nav > div.engage-navigation-height");
 
         let reloadButton = document.createElement("button");
         reloadButton.id = "reload";
 
-        reloadButton.innerText = "♻️";
+        reloadButton.innerText = "Reload ♻️";
 
-        navBar.parentNode.insertBefore(reloadButton, navBar.nextSibling);
+        await navBar.parentNode.insertBefore(reloadButton, navBar.nextSibling);
         //topBar.replaceChild(reloadButton, topBar.childNodes[4]);
 
 
@@ -57,7 +57,7 @@ function waitForDiv(querySelector, timeout) {
     });
 }
 
-waitForDiv("#falcon-sidebar-menu > nav > div > brandwatch-logo", 60000).then(buttonScript).catch(() => {
+waitForDiv("#mainUIView > div > ui-view > div > engage-sidebar > nav > div.engage-navigation-height", 60000).then(buttonScript).catch(() => {
     alert("Button was unable to load after 60 seconds. I'll try refreshing the tab now. If that doesn't work, refresh the tab and check your internet connection.");
 });
 

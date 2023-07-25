@@ -1,7 +1,7 @@
 async function refresher() {
     let buttonArray = await Array.from(
         document.querySelectorAll(
-            "[id^='cdk-drop-list'] > engage-feed > engage-feed-toolbar > section > div:nth-child(2) > button:nth-child(1)"
+            "[id^='cdk-drop-list'] > engage-feed > engage-feed-toolbar > section > engage-feed-actions > button:nth-child(1)"
         )
     );
 
