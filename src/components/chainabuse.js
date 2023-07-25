@@ -5,6 +5,7 @@ sdk('@chainabuse/v1.2#fgz6kolixb6hz3');
 
 
 const chainAbuse = async (_address) => {
+    // @dev, these secrets have been rotated. Leaving for example. 
     //const auth = 'ca_eTJ3aFVFb3RsbGZ2d1M3dXIxS0d6dHF6Lk0yQVZoQUJCWVFvN0p1TTR6Z0RYN1E9PQ';
     const auth = 'Y2FfZVRKM2FGVkZiM1JzYkdaMmQxTTNkWEl4UzBkNmRIRjZMazB5UVZab1FVSkNXVkZ2TjBwMVRUUjZaMFJZTjFFOVBROmNhX2VUSjNhRlZGYjNSc2JHWjJkMU0zZFhJeFMwZDZkSEY2TGsweVFWWm9RVUpDV1ZGdk4wcDFUVFI2WjBSWU4xRTlQUQ==';
     const page = '1';
